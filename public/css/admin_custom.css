@@ -1,6 +1,10 @@
 .resize_logo {
-    width: 150px;
+    width: 70px;
     /* filter: brightness(0) invert(1); */
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* width: 50%; */
 }
    #my_camera {
         width: 200px;

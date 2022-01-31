@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Smartec',
+    'title' => 'KYBEE LOANS',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -47,11 +47,11 @@ return [
 
     'logo' => '<span style="font-size:18px; font-weight:bold"></span>',
     'logo_short' => '<strong>&nbsp; </strong>',
-    'logo_img' => 'images/branding/smartec_logo_res.png',
+    'logo_img' => 'images/branding/kybee_logo_res.png',
     'logo_img_class' => 'resize_logo',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Smartec',
+    'logo_img_alt' => 'Kybee',
 
     /*
     |--------------------------------------------------------------------------
@@ -102,7 +102,7 @@ return [
     |
     */
 
-    'classes_auth_card' => 'card-outline card-blue',
+    'classes_auth_card' => 'card-outline card-orange',
     'classes_auth_header' => '',
     'classes_auth_body' => '',
     'classes_auth_footer' => '',
@@ -127,7 +127,7 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-light-gray elevation-2',
+    'classes_sidebar' => 'sidebar-light-orange elevation-2',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
@@ -247,91 +247,11 @@ return [
             //'label_color' => 'warning',
         ],
 
-        [
-            'text'    => 'Products',
-            'icon'    => 'fas fa-fw fa-box-open',
-            'submenu' => [
-                [
-                    'text' => 'New Product',
-                    'url'  => 'product/create',
-                    'can' => 'Create Product',
-                ],
-                [
-                    'text' => 'Manage Products',
-                    'url'  => 'product',
-                ],
-
-                [
-                    'text' => 'Bulk Upload',
-                    'url'  => 'products/bulk_upload',
-                ],
-
-
-                [
-                    'text' => 'Assign Product',
-                    'url'  => 'assign/product',
-                ],
-
-
-
-            ]
-        ],
-
-        [
-            'text'    => 'Business',
-            'icon'    => 'fas fa-fw fa-building',
-            'submenu' => [
-                [
-                    'text' => 'New Business',
-                    'url'  => 'businesses/create',
-                    'can' => 'Create business',
-                ],
-                [
-                    'text' => 'Manage Businesses',
-                    'url'  => 'businesses',
-                ],
 
 
 
 
-            ]
-        ],
 
-        [
-            'text'    => 'Customers',
-            'icon'    => 'fas fa-fw fa-user-plus',
-            'submenu' => [
-                [
-                    'text' => 'New Customer',
-                    'url'  => 'customers/create',
-                    'can' => 'Create Customer',
-                ],
-                [
-                    'text' => 'Manage Customers',
-                    'url'  => 'customers',
-                ],
-
-
-            ]
-        ],
-
-        [
-            'text'    => 'Job Cards',
-            'icon'    => 'fas fa-fw fa-cog',
-            'submenu' => [
-                [
-                    'text' => 'New job Card',
-                    'url'  => 'job_cards/create',
-                ],
-                [
-                    'text' => 'Manage Job Cards',
-                    'url'  => 'job_cards',
-                ],
-
-
-            ],
-            'can' => 'Create Job Card'
-        ],
 
         [
             'text'    => 'Settings',
@@ -339,43 +259,19 @@ return [
             'submenu' => [
 
                 [
-                    'text' => 'Product Types',
-                    'url'  => 'product_type',
+                    'text' => 'Terms and Conditions',
+                    'url'  => 'settings/terms_and_conditions',
                 ],
-                [
-                    'text' => 'Product Categories',
-                    'url'  => 'categories',
-                ],
-                [
-                    'text' => 'Product Models',
-                    'url'  => 'product_models',
-                ],
+
 
 
 
             ],
-            'can' => 'Manage Categories'
+            // 'can' => 'Manage Categories'
 
         ],
 
 
-        [
-            'text'    => 'Reports',
-            'icon'    => 'fas fa-fw fa-file',
-            'submenu' => [
-                [
-                    'text' => 'Product Reports',
-                    'url'  => '/product',
-                ],
-                [
-                    'text' => 'Job Card Reports',
-                    'url'  => '/job_cards',
-                ],
-
-
-            ],
-            'can' => 'Product Reports'
-        ],
 
         [
             'text'    => 'Users Management',
@@ -399,7 +295,7 @@ return [
 
 
             ],
-            'can' => ['Create User'],
+            // 'can' => ['Create User'],
         ],
 
 

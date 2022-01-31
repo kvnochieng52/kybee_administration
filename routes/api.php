@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::get('/terms_conditions_fetch', 'Api\AppSettingController@terms_conditions_fetch');
+
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {
     return $request->user();

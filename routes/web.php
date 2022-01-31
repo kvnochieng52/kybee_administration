@@ -19,4 +19,9 @@ Route::get('/home', 'HomeController@index');
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
+
+    Route::prefix('settings')->group(function () {
+        Route::get('/terms_and_conditions', 'SettingController@terms_conditions');
+        Route::post('/terms_conditions_process', 'SettingController@terms_conditions_process');
+    });
 });
