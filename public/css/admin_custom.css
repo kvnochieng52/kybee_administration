@@ -1,0 +1,27 @@
+.resize_logo {
+    width: 150px;
+    /* filter: brightness(0) invert(1); */
+}
+   #my_camera {
+        width: 200px;
+        height: 200px;
+        border: 1px solid black;
+    }
+
+    .has-error {
+        color: red
+    }
+
+    .has-error .form-control {
+        border-color: red
+    }
+
+    .has-success .form-control {
+        border-color: green
+    }
+
+    .info-table td{
+        padding: 5px !important;
+    }
+
+    .content{ padding-top:15px !important;}
