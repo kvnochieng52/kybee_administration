@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\SMS;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -18,9 +20,16 @@ class UserController extends Controller
             $user_details = User::find(Auth::id());
 
             if ($user_details->is_active == 1) {
-                $results['success'] = true;
-                $results['data'] = $user_details;
-                $results['message'] = 'success';
+
+                if ($user_details->phone_verified == 1) {
+                    $results['success'] = true;
+                    $results['data'] = $user_details;
+                    $results['message'] = 'success';
+                } else {
+                    $results['success'] = false;
+                    $results['data'] = [];
+                    $results['message'] = 'Your Phone Number is not verified. Please verify';
+                }
             } else {
                 $results['success'] = false;
                 $results['data'] = [];
@@ -36,7 +45,89 @@ class UserController extends Controller
     }
 
 
-    public function regsiter(Request $request)
+    public function register(Request $request)
     {
+        $results = [];
+        $user_check = User::where('telephone', $request->input('telephone'))->first();
+        if (!empty($user_check)) {
+            $results['success'] = false;
+            $results['data'] = [];
+            $results['message'] = "The telephone provided is registered. Please login/reset password";
+        } else {
+
+            $randomNumber = random_int(10000, 99999);
+
+            $user = new User();
+            $user->telephone = $request->input('telephone');
+            $user->is_active = 1;
+            $user->password = Hash::make($request->input('password'));
+            //$user->email = 'the-email@example.com';
+            $user->name = '';
+            $user->verification_code = $randomNumber;
+            $user->save();
+
+            $message = "KYBEE LOAN verification code is: {$randomNumber}";
+            // SMS::send($request->input('telephone'), $message);
+
+            $results['success'] = true;
+            $results['data'] = User::find($user->id);
+            $results['message'] = "Verification code sent. Verify Your account to continue";
+        }
+
+        return $results;
+    }
+
+
+
+    public function verify(Request $request)
+    {
+
+        $results = [];
+        $user_check = User::where('telephone', $request->input('telephone'))
+            ->where('verification_code', $request->input('verification_code'))
+            ->first();
+
+
+        if (!empty($user_check)) {
+            $user_check->phone_verified = 1;
+            $user_check->save();
+            $results['success'] = true;
+            $results['data'] = [];
+            $results['message'] = "Account verified. Please login to continue";
+        } else {
+            $results['success'] = false;
+            $results['data'] = [];
+            $results['message'] = "Invalid Verification code";
+        }
+
+        return $results;
+    }
+
+
+
+    public function resend_verification(Request $request)
+    {
+        $results = [];
+        $user_check = User::where('telephone', $request->input('telephone'))->first();
+
+        if (!empty($user_check)) {
+            $randomNumber = random_int(10000, 99999);
+
+            $user_check->verification_code = $randomNumber;
+            $user_check->save();
+
+            $message = "KYBEE LOAN verification code is: {$randomNumber}";
+            // SMS::send($request->input('telephone'), $message);
+
+            $results['success'] = true;
+            $results['data'] = [];
+            $results['message'] = "Verification code Resend.";
+        } else {
+            $results['success'] = false;
+            $results['data'] = [];
+            $results['message'] = "Invalid Phone No";
+        }
+
+        return $results;
     }
 }

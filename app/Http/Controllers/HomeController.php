@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\Customer;
 use App\Models\JobCard;
 use App\Models\Product;
+use App\Models\SMS;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,6 +29,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+
+        // $res = SMS::send('0713295853', "Hi Kevin");
+        // dd($res);
 
         return view('home');
     }
