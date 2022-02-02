@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Gender;
 use App\Models\UserDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class ProfileController extends Controller
             'id_number' => $request->input('id_number'),
             'email' => $request->input('email'),
             'date_of_birth' => Carbon::parse($request->input('dob'))->format("Y-m-d"),
+            'gender_id' => $request->input('gender'),
         ];
 
         if (empty($user_details)) {
@@ -49,16 +51,19 @@ class ProfileController extends Controller
     public function details(Request $request)
     {
         $user_details = UserDetail::where('user_id', $request->input('user_id'))->first();
+        $gender_details = Gender::where('visible', 1)->get(['gender_name', 'id']);
         if (!empty($user_details)) {
             return [
                 'success' => true,
                 'message' => 'Details found',
+                'genders' => $gender_details,
                 'data' => $user_details,
             ];
         } else {
             return [
                 'success' => false,
                 'message' => 'Details not found',
+                'genders' => $gender_details,
                 'data' => [],
             ];
         }
