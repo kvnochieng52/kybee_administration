@@ -22,6 +22,13 @@ Route::post('/verify', 'Api\UserController@verify');
 Route::post('/resend_verification', 'Api\UserController@resend_verification');
 
 
+/** MPESA routes */
+Route::any('/transactions/get_access_token', 'Api\TransactionsController@get_access_token');
+Route::any('/transactions/confirmation', 'Api\TransactionsController@confirmation_url');
+Route::any('/transactions/validation', 'Api\TransactionsController@validation_url');
+Route::any('/transactions/register', 'Api\TransactionsController@register_url');
+
+
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {
     return $request->user();
