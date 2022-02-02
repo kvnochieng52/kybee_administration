@@ -22,6 +22,11 @@ Route::post('/verify', 'Api\UserController@verify');
 Route::post('/resend_verification', 'Api\UserController@resend_verification');
 
 
+Route::prefix('profile')->group(function () {
+    Route::post('/update', 'Api\ProfileController@update');
+    Route::post('/details', 'Api\ProfileController@details');
+});
+
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {
     return $request->user();
