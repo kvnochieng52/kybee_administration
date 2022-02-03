@@ -28,6 +28,8 @@ class CreateUserDetailsTable extends Migration
             $table->integer('employment_status_id')->nullable($value = true);
             $table->integer('salary_range')->nullable($value = true);
             $table->integer('outstanding_loan_status')->nullable($value = true);
+            $table->bigInteger('company_county_id')->nullable($value = true);
+            $table->text('company_address')->nullable($value = true);
             $table->bigInteger('county_id')->nullable($value = true);
             $table->text('home_address')->nullable($value = true);
             $table->integer('created_by');
