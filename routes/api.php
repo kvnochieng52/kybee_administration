@@ -28,6 +28,10 @@ Route::any('/transactions/confirmation', 'Api\TransactionsController@confirmatio
 Route::any('/transactions/validation', 'Api\TransactionsController@validation_url');
 Route::any('/transactions/register', 'Api\TransactionsController@register_url');
 
+Route::prefix('profile')->group(function () {
+    Route::post('/update', 'Api\ProfileController@update');
+    Route::post('/details', 'Api\ProfileController@details');
+});
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {

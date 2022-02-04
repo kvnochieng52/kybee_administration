@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Models\MpesaAPI;
+use App\Models\UserDetail;
+use App\User;
 
 class TransactionsController extends Controller
 {
@@ -17,61 +19,68 @@ class TransactionsController extends Controller
         echo $access_token;
     }
 
+    /** This is Customer 2 Business Payment Logic */
     public function confirmation_url()
     {
 
-            header('Content-Type: application/json');
+        header('Content-Type: application/json');
 
-            $response = '{
+        $response = '{
             "ResultCode": 0,
             "ResultDesc": "Confirmation Received Successfully"
         }';
 
-            // Response from M-PESA Stream
-            $mpesaResponse = file_get_contents('php://input');
+        // Response from M-PESA Stream
+        $mpesaResponse = file_get_contents('php://input');
 
-            $current_time = Carbon::now('Africa/Nairobi');
-            $PayDate = $current_time->toDateString();
-            $PayTime = $current_time->toTimeString();
+        $current_time = Carbon::now('Africa/Nairobi');
+        $PayDate = $current_time->toDateString();
+        $PayTime = $current_time->toTimeString();
 
-            // log the daily response in a .json file
-            $logFile = $PayDate.'MPESAConfirmationResponse.json';
+        // log the daily response in a .json file
+        $logFile = $PayDate . 'MPESAConfirmationResponse.json';
 
-            $jsonMpesaResponse = json_decode($mpesaResponse, true);
+        $jsonMpesaResponse = json_decode($mpesaResponse, true);
 
-            /** Log the transaction details in the daily log file */
-            Log::info("-----------------START MPESA LOGGING PROCESS------------------------------");
-            Log::info(print_r($mpesaResponse, true));
-            Log::info(print_r($jsonMpesaResponse, true));
-            Log::info("-----------------STOP MPESA LOGGING PROCESS------------------------------");
+        /** Log the transaction details in the daily log file */
+        Log::info("-----------------START MPESA LOGGING PROCESS------------------------------");
+        Log::info(print_r($mpesaResponse, true));
+        Log::info(print_r($jsonMpesaResponse, true));
+        Log::info("-----------------STOP MPESA LOGGING PROCESS------------------------------");
 
-            /** Capture the Mpesa response parameters */
-            $TransID = $jsonMpesaResponse['TransID'];
-            $TransAmount = $jsonMpesaResponse['TransAmount'];
-            $BusinessShortCode = $jsonMpesaResponse['BusinessShortCode'];
-            $BillRefNumber = ucwords($jsonMpesaResponse['BillRefNumber']);
-            $InvoiceNumber = $jsonMpesaResponse['InvoiceNumber'];
-            $OrgAccountBalance = $jsonMpesaResponse['OrgAccountBalance'];
-            $MSISDN = $jsonMpesaResponse['MSISDN'];
+        /** Capture the Mpesa response parameters */
+        $TransID = $jsonMpesaResponse['TransID'];
+        $TransAmount = $jsonMpesaResponse['TransAmount'];
+        $BillRefNumber = ucwords($jsonMpesaResponse['BillRefNumber']);
+        $OrgAccountBalance = $jsonMpesaResponse['OrgAccountBalance'];
+        $MSISDN = $jsonMpesaResponse['MSISDN'];
 
 
-            // write to file
-            $log = fopen($logFile, 'a');
-            fwrite($log, $mpesaResponse);
-            fclose($log);
+        // write to file
+        $log = fopen($logFile, 'a');
+        fwrite($log, $mpesaResponse);
+        fclose($log);
 
-            echo $response;
+        echo $response;
 
-            /** Check customer information based on the phone number 
-             * If phone number exists, do the necessary logic
-            */
+        /** Check customer information based on the phone number 
+         * If phone number exists, do the necessary logic
+         */
 
+        $customer = User::where('telephone', $BillRefNumber)->first();
+        if (!empty($customer)) {
+            /** Add the logic here */
+            $customer_id = $customer->id;
+
+            /** Get the active loan of the customer */
+
+        }
     }
 
     public function validation_url()
     {
 
-       
+
         header('Content-Type: application/json');
 
         $response = '{
@@ -87,7 +96,7 @@ class TransactionsController extends Controller
         $PayTime = $current_time->toTimeString();
 
         // log the daily response in a .json file
-        $logFile = $PayDate.'MPESAValidationResponse.json';
+        $logFile = $PayDate . 'MPESAValidationResponse.json';
 
         $jsonMpesaResponse = json_decode($mpesaResponse, true);
 
