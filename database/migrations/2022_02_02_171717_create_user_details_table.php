@@ -23,10 +23,13 @@ class CreateUserDetailsTable extends Migration
             $table->text('id_number')->nullable($value = true);
             $table->date('date_of_birth')->nullable($value = true);
             $table->integer('marital_status_id')->nullable($value = true);
+            $table->integer('gender_id')->nullable($value = true);
             $table->integer('education_level_id')->nullable($value = true);
             $table->integer('employment_status_id')->nullable($value = true);
             $table->integer('salary_range')->nullable($value = true);
             $table->integer('outstanding_loan_status')->nullable($value = true);
+            $table->bigInteger('company_county_id')->nullable($value = true);
+            $table->text('company_address')->nullable($value = true);
             $table->bigInteger('county_id')->nullable($value = true);
             $table->text('home_address')->nullable($value = true);
             $table->integer('created_by');
