@@ -21,7 +21,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
 
-        $user_details = UserDetail::where('user_id', $request->input('user_id'))->first();
+        $user_details = UserDetail::getUserByID($request->input('user_id'));
 
 
         if (empty($user_details)) {
