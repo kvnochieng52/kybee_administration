@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\LoanDistribution;
 use App\Models\SMS;
+use App\Models\UserLoanDistribution;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +68,14 @@ class UserController extends Controller
             $user->name = '';
             $user->verification_code = $randomNumber;
             $user->save();
+
+
+            UserLoanDistribution::insert([
+                'user_id' => $user->id,
+                'loan_distribution_id' => LoanDistribution::where(['order' => 1, 'visible' => 1])->fisrt()->id,
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
+            ]);
 
             $message = "KYBEE LOAN verification code is: {$randomNumber}";
             // SMS::send($request->input('telephone'), $message);

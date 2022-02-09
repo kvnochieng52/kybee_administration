@@ -33,7 +33,13 @@ Route::prefix('profile')->group(function () {
     Route::post('/details', 'Api\ProfileController@details');
 });
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
+
+Route::prefix('loan')->group(function () {
+    Route::post('/dashboard_init', 'Api\LoanController@dashboard_init');
+    Route::post('/calculate_loan', 'Api\LoanController@calculate_loan');
+    Route::get('/apply_loan', 'Api\LoanController@apply_loan');
+});
+
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {
     return $request->user();
 });
