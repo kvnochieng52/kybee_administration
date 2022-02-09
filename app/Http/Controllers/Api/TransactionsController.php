@@ -213,4 +213,89 @@ class TransactionsController extends Controller
 
         //$array = json_decode($request, true);
     }
+
+    /** MPESA B2C (Business disbursement of loan to customer) */
+    public function send_loan(Request $request)
+    {
+        /** Get approved loan appliactions that have not beemn disbursed yet
+         * This could be fetched through a background job
+         */
+        $PhoneNumber = $request->phone_number;
+        $Amount = $request->amount;
+        $environment = env('MPESA_B2C_ENV');
+
+
+        $token = MpesaAPI::generateB2CAccessToken();
+        if ($environment == 'live') {
+
+            if ($environment)
+
+                $url = 'https://api.safaricom.co.ke/mpesa/b2c/v1/paymentrequest';
+        } elseif ($environment == 'sandbox') {
+
+            $url = 'https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest';
+        } else {
+            return json_encode(['Message' => 'invalid application status']);
+        }
+
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:Bearer ' . $token));
+
+
+        $InitiatorName = "PaskyAPI";
+        $SecurityCredential = "JL3VafLKSy7DCQ0u3XWVWj4jfm3HSqBv62v25uLOphG/L6JCHVfcslqYSh1+oGVSocEwQX3aTQTq1dr54QHll5SAGFmGnajVyjwwDRNpFf8yxBl6gxZpPPu7Nbqgn8Mbgr85qxVHSjO6bKfAWfJnpMvHDjJ+aEYxUkXRunY1xgc9KzLmj+iGjvhiysKI71KSPHilA9hb5YJhHlYaglaVtfJayYkShO/qNitoXdUNrlJsHUiLZ6L0ubuuQvhKQ/KqkjMeozyttRM2H+wu0C+ZDGzHAAQrJIdNe1eLr6XVNUJ6mKu5I+kT/Qit52smeFQ3mziMKVwj2mRY0o1PjW18aw==";
+        $CommandID = "SalaryPayment";
+        $Amount = $Amount;
+        $PartyA = '603021';
+        $PartyA = '7502040';
+        $PartyB = $PhoneNumber;
+        $Remarks = "Loan disbursement";
+        $QueueTimeOutURL = "https://pasky.driftsoftware.com/api/transactions/queue_timeout_url";
+        $ResultURL = "https://pasky.driftsoftware.com/api/transactions/result_url";
+        $Occasion = "Loan payment";
+
+
+        $curl_post_data = array(
+            'InitiatorName' => $InitiatorName,
+            'SecurityCredential' => $SecurityCredential,
+            'CommandID' => $CommandID,
+            'Amount' => $Amount,
+            'PartyA' => $PartyA,
+            'PartyB' => $PartyB,
+            'Remarks' => $Remarks,
+            'QueueTimeOutURL' => $QueueTimeOutURL,
+            'ResultURL' => $ResultURL,
+            'Occasion' => $Occasion
+        );
+
+        $data_string = json_encode($curl_post_data);
+        $data_string1 = json_decode($data_string, true);
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+
+        $curl_response = curl_exec($curl);
+        $array = (array) $curl_response;
+        $array1 = $array[0];
+
+        $res1 = json_decode($array1, true);
+        $res2 = json_decode(json_encode($res1), true);
+        
+
+
+        try {
+
+            $resCode = $res2['ResponseCode'];
+
+         
+        } catch (\Throwable $e) {
+            $msg = $res2['errorMessage'];
+
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+           
+        }
+    }
 }
