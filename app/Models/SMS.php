@@ -34,4 +34,10 @@ class SMS extends Model
         $DestinationPhoneNum = substr($DestinationPhoneNum, -9, 9);
         return $DestinationPhoneNum = '254' . $DestinationPhoneNum;
     }
+
+    public static function validate_phone_number($phonenumber){
+
+        $validated_phonenumber = str_replace('-', '', preg_replace('/[^a-zA-Z0-9-_\.]/','', $phonenumber)); 
+        return $validated_phonenumber;
+    }
 }

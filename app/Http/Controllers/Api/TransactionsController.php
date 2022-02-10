@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Loan;
+use App\Models\LoanStatus;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Models\MpesaAPI;
+use App\Models\RepaymentStatus;
+use App\Models\SMS;
 use App\Models\UserDetail;
 use App\User;
 
@@ -51,7 +55,7 @@ class TransactionsController extends Controller
         /** Capture the Mpesa response parameters */
         $TransID = $jsonMpesaResponse['TransID'];
         $TransAmount = $jsonMpesaResponse['TransAmount'];
-        $BillRefNumber = ucwords($jsonMpesaResponse['BillRefNumber']);
+        $BillRefNumber = SMS::validate_phone_number($jsonMpesaResponse['BillRefNumber']);
         $OrgAccountBalance = $jsonMpesaResponse['OrgAccountBalance'];
         $MSISDN = $jsonMpesaResponse['MSISDN'];
 
@@ -70,10 +74,32 @@ class TransactionsController extends Controller
         $customer = User::where('telephone', $BillRefNumber)->first();
         if (!empty($customer)) {
             /** Add the logic here */
-            $customer_id = $customer->id;
+            $user_id = $customer->id;
 
             /** Get the active loan of the customer */
+            $active_loan = Loan::where('user_id', $user_id)->first();
+            $balance = $active_loan->balance;
+            $new_balance = $balance - $TransAmount;
+            $amount_paid = $active_loan->amount_paid;
+            $new_amount_paid = $amount_paid + $TransAmount;
 
+            /** Update amount paid in loans table */
+
+            if ($balance <= 0) {
+                /** Update repay status id to 2 (Closed) */
+
+                $new_repay_status_id = RepaymentStatus::CLOSED;
+                $new_loan_status_array = array(
+                    'loan_repayment' => $new_repay_status_id
+                );
+
+                //$update_loan_status = Loan::where('id', $active_loans->id)->update($new_loan_status_array);
+            }
+
+            $new_loan_status_array = array(
+                'amount_paid' => $new_amount_paid,
+                'balance' => $new_balance
+            );
         }
     }
 
@@ -220,18 +246,23 @@ class TransactionsController extends Controller
         /** Get approved loan appliactions that have not beemn disbursed yet
          * This could be fetched through a background job
          */
-        $PhoneNumber = $request->phone_number;
-        $Amount = $request->amount;
-        $environment = env('MPESA_B2C_ENV');
+        $loan_status_id = LoanStatus::APPROVED;
+        $active_loans = Loan::where('loan_status_id', $loan_status_id)->first();
+
+        /** Get user phone number based on the user_id */
+
+        $PhoneNumber = User::where('id', $active_loans->user_id)->first();
+        $Amount = $active_loans->disbursed;
+        $B2CEnvironment = env('MPESA_B2C_ENV');
 
 
         $token = MpesaAPI::generateB2CAccessToken();
-        if ($environment == 'live') {
+        if ($B2CEnvironment == 'live') {
 
-            if ($environment)
+            if ($B2CEnvironment)
 
                 $url = 'https://api.safaricom.co.ke/mpesa/b2c/v1/paymentrequest';
-        } elseif ($environment == 'sandbox') {
+        } elseif ($B2CEnvironment == 'sandbox') {
 
             $url = 'https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest';
         } else {
@@ -254,9 +285,9 @@ class TransactionsController extends Controller
         $Remarks = "Loan disbursement";
         $QueueTimeOutURL = "https://pasky.driftsoftware.com/api/transactions/queue_timeout_url";
         $ResultURL = "https://pasky.driftsoftware.com/api/transactions/result_url";
-        $Occasion = "Loan payment";
+        $Occasion = "Loan Disbursement";
 
-
+        /** MPESA B2C post data */
         $curl_post_data = array(
             'InitiatorName' => $InitiatorName,
             'SecurityCredential' => $SecurityCredential,
@@ -283,19 +314,28 @@ class TransactionsController extends Controller
 
         $res1 = json_decode($array1, true);
         $res2 = json_decode(json_encode($res1), true);
-        
-
 
         try {
 
             $resCode = $res2['ResponseCode'];
 
-         
+            /** Update the loan status id to 4 - Sent */
+            $new_loan_status_id = 4;
+            $new_loan_status_array = array(
+                'loan_status_id' => $new_loan_status_id
+            );
+
+            $update_loan_status = Loan::where('id', $active_loans->id)->update($new_loan_status_array);
+
+            /** Log the successful transaction */
+            $current_date_and_time = Carbon::now('Africa/Nairobi');
+            Log::info("-----------------Start New Transaction Entry (Loan Disbursement)-----------------");
+            Log::info("Phone Number: " . $PhoneNumber . "Amount: " . $Amount . "Date and Time: " . $current_date_and_time);
+            Log::info("-----------------Stop New Transaction Entry (Loan Disbursement)-----------------");
         } catch (\Throwable $e) {
             $msg = $res2['errorMessage'];
 
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-           
         }
     }
 }
