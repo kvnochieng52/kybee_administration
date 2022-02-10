@@ -30,7 +30,7 @@ Route::any('/transactions/get_access_token', 'Api\TransactionsController@get_acc
 Route::any('/transactions/confirmation', 'Api\TransactionsController@confirmation_url');
 Route::any('/transactions/validation', 'Api\TransactionsController@validation_url');
 Route::any('/transactions/register', 'Api\TransactionsController@register_url');
-
+//
 Route::prefix('profile')->group(function () {
     Route::post('/update', 'Api\ProfileController@update');
     Route::post('/details', 'Api\ProfileController@details');
