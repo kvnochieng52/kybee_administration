@@ -18,4 +18,13 @@ class AppSettingController extends Controller
             'terms' => ($terms != null) ? $terms : []
         ];
     }
+
+
+    public function get_settings(Request $request)
+    {
+        return [
+            'success' => true,
+            'data' => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()
+        ];
+    }
 }

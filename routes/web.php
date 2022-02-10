@@ -20,9 +20,14 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
 
+    Route::resource('loans', 'LoanController');
+
     Route::prefix('loan')->group(function () {
         Route::get('{status_id}/status', 'LoanController@status');
-        Route::post('/terms_conditions_process', 'SettingController@terms_conditions_process');
+        Route::get('pending_repayment', 'LoanController@pending_repayment');
+        Route::get('over_due', 'LoanController@over_due');
+        Route::get('due', 'LoanController@due');
+        Route::get('paid', 'LoanController@paid');
     });
 
     Route::prefix('settings')->group(function () {

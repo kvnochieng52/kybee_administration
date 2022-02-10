@@ -22,6 +22,10 @@ Route::post('/verify', 'Api\UserController@verify');
 Route::post('/resend_verification', 'Api\UserController@resend_verification');
 
 
+Route::prefix('app_settings')->group(function () {
+    Route::post('/get_settings', 'Api\AppSettingController@get_settings');
+});
+
 Route::prefix('profile')->group(function () {
     Route::post('/update', 'Api\ProfileController@update');
     Route::post('/details', 'Api\ProfileController@details');

@@ -99,4 +99,24 @@ class Loan extends Model
             ->leftJoin('users', 'loans.user_id', 'users.id')
             ->leftJoin('user_details', 'loans.user_id', 'user_details.user_id');
     }
+
+    public static function getLoanByID($ID)
+
+    {
+
+        return self::leftJoin('loan_statuses', 'loans.loan_status_id', 'loan_statuses.id')
+            ->leftJoin('repayment_statuses', 'loans.repayment_status_id', 'repayment_statuses.id')
+            ->leftJoin('users', 'loans.user_id', 'users.id')
+            ->leftJoin('user_details', 'loans.user_id', 'user_details.user_id')
+            ->where('loans.id', $ID)
+            ->first([
+                'loans.*',
+                'loan_statuses.loan_status_name',
+                'repayment_statuses.repayment_status_name',
+                'users.telephone',
+                'user_details.first_name',
+                'user_details.middle_name',
+                'user_details.last_name',
+            ]);
+    }
 }

@@ -37,15 +37,32 @@
                             <tr>
 
                                 <td>{{$key+1}}</td>
-                                <td>{{$loan->first_name}} {{$loan->middle_name}} {{$loan->last_name}}</td>
+                                <td>
+                                    <a href="/loans/{{$loan->id}}/edit" title="Show Details">
+                                        <b>{{$loan->first_name}} {{$loan->middle_name}} {{$loan->last_name}}</b>
+                                    </a>
+                                </td>
                                 <td>{{$loan->telephone}}</td>
                                 <td>Ksh {{$loan->total_amount}}</td>
                                 <td>Ksh {{$loan->disbursed}}</td>
                                 <td>Ksh {{$loan->interest+$loan->commission}}</td>
                                 <td> {{\Carbon\Carbon::parse($loan->application_date)->format("d-F-Y")}}</td>
                                 <td> {{\Carbon\Carbon::parse($loan->due_date)->format("d-F-Y")}}</td>
-                                <td>{{$loan->loan_status_name}}</td>
-                                <td></td>
+                                <td>
+
+                                    <a href="/loans/{{$loan->id}}/edit" title="Show Details">
+                                        <span
+                                            class="badge badge-{{$loan->loan_status_id==2? 'success' : 'primary' }}">{{$loan->loan_status_name}}
+                                        </span>
+
+                                    </a>
+                                </td>
+                                <td>
+
+                                    <a href="/loans/{{$loan->id}}/edit" title="Show Details"
+                                        class="btn btn-xs btn-secondary"><strong> <i class="fas fa-edit"></i></strong>
+                                    </a>
+                                </td>
                             </tr>
 
                             @endforeach
@@ -54,6 +71,13 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="card-footer">
+            {{ $loans->links() }}
+
         </div>
     </div>
 </div>
