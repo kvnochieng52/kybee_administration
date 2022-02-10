@@ -25,6 +25,11 @@ Route::post('/resend_verification', 'Api\UserController@resend_verification');
 Route::prefix('app_settings')->group(function () {
     Route::post('/get_settings', 'Api\AppSettingController@get_settings');
 });
+/** MPESA routes */
+Route::any('/transactions/get_access_token', 'Api\TransactionsController@get_access_token');
+Route::any('/transactions/confirmation', 'Api\TransactionsController@confirmation_url');
+Route::any('/transactions/validation', 'Api\TransactionsController@validation_url');
+Route::any('/transactions/register', 'Api\TransactionsController@register_url');
 
 Route::prefix('profile')->group(function () {
     Route::post('/update', 'Api\ProfileController@update');
