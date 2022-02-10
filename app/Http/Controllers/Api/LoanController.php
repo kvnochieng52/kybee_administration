@@ -45,12 +45,19 @@ class LoanController extends Controller
 
             $required_loan_limit = Loan::requiredLimit($request->input('user_id'), $request->input('loan_distribution_id'));
             if ($required_loan_limit) {
-                //check if has active loan... to check later.
-                Loan::process($request->input('user_id'), $request->input('loan_distribution_id'));
 
-                $result['success'] = true;
-                $result['error_code'] = 0;
-                $result['message'] = "Profile Completed.";
+                $user_has_active_loan = Loan::checkForActiveLoan($request->input('user_id'));
+
+                if ($user_has_active_loan) {
+                    $result['success'] = false;
+                    $result['error_code'] = 0;
+                    $result['message'] = "You have an active Loan. Please Repay the loan to apply for another";
+                } else {
+                    Loan::process($request->input('user_id'), $request->input('loan_distribution_id'));
+                    $result['success'] = true;
+                    $result['error_code'] = 0;
+                    $result['message'] = "Profile Completed.";
+                }
             } else {
                 $result['success'] = false;
                 $result['error_code'] = 2;
@@ -59,7 +66,7 @@ class LoanController extends Controller
         } else {
             $result['success'] = false;
             $result['error_code'] = 1;
-            $result['message'] = "Complete Profile to Apply for the loan.";
+            $result['message'] = "Complete Profile to Apply for a loan.";
         }
         return $result;
     }
