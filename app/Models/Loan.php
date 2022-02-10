@@ -42,7 +42,11 @@ class Loan extends Model
     public static function requiredLimit($user_id, $loan_distribution_id)
     {
         $user_details = UserDetail::getUserByID($user_id);
-        if ($user_details->loan_distribution_id == $loan_distribution_id) {
+
+        $user_loan_limit = LoanDistribution::find($user_details->loan_distribution_id);
+        $loan_trying_to_apply = LoanDistribution::find($loan_distribution_id);
+
+        if ($loan_trying_to_apply->order <= $user_loan_limit->order) {
             return true;
         } else {
             return false;
@@ -70,5 +74,29 @@ class Loan extends Model
         $loan->created_by = $user_id;
         $loan->updated_by = $user_id;
         $loan->save();
+    }
+
+
+    public static function checkForActiveLoan($user_id)
+    {
+        $check = Loan::where([
+            'user_id' => $user_id,
+            'repayment_status_id' => RepaymentStatus::OPEN,
+        ])->first();
+
+        if (!empty($check)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public static function getLoans()
+    {
+        return self::leftJoin('loan_statuses', 'loans.loan_status_id', 'loan_statuses.id')
+            ->leftJoin('repayment_statuses', 'loans.repayment_status_id', 'repayment_statuses.id')
+            ->leftJoin('users', 'loans.user_id', 'users.id')
+            ->leftJoin('user_details', 'loans.user_id', 'user_details.user_id');
     }
 }

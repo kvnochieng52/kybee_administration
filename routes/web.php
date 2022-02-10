@@ -20,6 +20,11 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
 
+    Route::prefix('loan')->group(function () {
+        Route::get('{status_id}/status', 'LoanController@status');
+        Route::post('/terms_conditions_process', 'SettingController@terms_conditions_process');
+    });
+
     Route::prefix('settings')->group(function () {
         Route::get('/terms_and_conditions', 'SettingController@terms_conditions');
         Route::post('/terms_conditions_process', 'SettingController@terms_conditions_process');
