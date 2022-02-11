@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\LoanDistribution;
+use App\Models\RepaymentStatus;
 use App\Models\Setting;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
@@ -15,12 +16,16 @@ class LoanController extends Controller
     {
 
         $user_details = UserDetail::getUserByID($request->input('user_id'));
+        $active_loan = Loan::where('user_id', $request->input('user_id'))->where('repayment_status_id', RepaymentStatus::OPEN)->first();
+
         return [
             'success' => true,
             'loan_distributions' => LoanDistribution::where(['visible' => 1])->orderBy('order', 'DESC')->get(),
             'user_details' => $user_details,
             'currency' => Setting::where('code', 'CURRENCY')->where('active', 1)->first()->setting_value,
             'default_loan' => Loan::calculateLoan($user_details->loan_distribution_id),
+            'active_loan' => !empty($active_loan) ? true : false,
+            'active_loan_details' => $active_loan,
         ];
     }
 
