@@ -25,23 +25,23 @@ class UserController extends Controller
             if ($user_details->is_active == 1) {
 
                 if ($user_details->phone_verified == 1) {
-                    $results['success'] = true;
-                    $results['data'] = $user_details;
-                    $results['message'] = 'success';
+                    $results["success"] = true;
+                    $results["data"] = $user_details;
+                    $results["message"] = "success";
                 } else {
-                    $results['success'] = false;
-                    $results['data'] = [];
-                    $results['message'] = 'Your Phone Number is not verified. Please verify';
+                    $results["success"] = false;
+                    $results["data"] = [];
+                    $results["message"] = "Your Phone Number is not verified. Please verify";
                 }
             } else {
-                $results['success'] = false;
-                $results['data'] = [];
-                $results['message'] = 'Your account is not activated. Please contact us for assistance';
+                $results["success"] = false;
+                $results["data"] = [];
+                $results["message"] = "Your account is not activated. Please contact us for assistance";
             }
         } else {
-            $results['success'] = false;
-            $results['data'] = [];
-            $results['message'] = 'Credentials do not march. Please check and Try again';
+            $results["success"] = false;
+            $results["data"] = [];
+            $results["message"] = "Credentials do not march. Please check and Try again";
         }
 
         return $results;
