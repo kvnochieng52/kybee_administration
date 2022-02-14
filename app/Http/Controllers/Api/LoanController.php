@@ -25,6 +25,7 @@ class LoanController extends Controller
                 'loan_statuses.loan_status_name',
                 'loan_statuses.description',
                 'loan_statuses.color_code',
+                'loan_statuses.id AS loan_status_id',
             ]);
         if (!empty($active_loan)) {
             $active_loan->total_amount_formatted =  number_format(round($active_loan->total_amount));
