@@ -26,16 +26,16 @@ class Loan extends Model
             "commission" => $commission,
             "disbursed" => $disbursed,
 
-            "total_loan_amount_formatted" => $total_loan_amount,
-            "intrest_formatted" => $intrest,
-            "commission_formatted" => $commission,
-            "disbursed_formatted" => $disbursed,
+            "total_loan_amount_formatted" => number_format($total_loan_amount),
+            "intrest_formatted" => number_format($intrest),
+            "commission_formatted" => number_format($commission),
+            "disbursed_formatted" => number_format($disbursed),
 
             "application_date" => Carbon::now()->format("Y-m-d"),
             "due_date" => Carbon::now()->addDays($loan->period)->format("Y-m-d"),
             "application_date_formatted" => Carbon::now()->format("d-F-Y"),
             "due_date_formatted" => Carbon::now()->addDays($loan->period)->format("d-F-Y"),
-            "loan_details" => $loan
+            "loan_details" => $loan,
         ];
     }
 
