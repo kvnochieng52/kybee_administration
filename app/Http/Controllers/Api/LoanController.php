@@ -98,7 +98,7 @@ class LoanController extends Controller
 
         return [
             'success' => true,
-            'mpesa_pabill' => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()->setting_value,
+            'mpesa_paybill' => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()->setting_value,
             'account_number' => UserDetail::getUserByID($request->input('user_id'))->telephone,
             'balance' => Loan::getLoanByID($request->input('loan_id'))->balance,
         ];
