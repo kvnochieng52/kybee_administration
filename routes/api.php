@@ -42,6 +42,7 @@ Route::prefix('loan')->group(function () {
     Route::post('/calculate_loan', 'Api\LoanController@calculate_loan');
     Route::post('/apply_loan', 'Api\LoanController@apply_loan');
     Route::post('/repayment_details', 'Api\LoanController@repayment_details');
+    Route::post('/close_loan', 'Api\LoanController@close_loan');
 });
 
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {

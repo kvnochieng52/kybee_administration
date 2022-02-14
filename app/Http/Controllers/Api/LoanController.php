@@ -104,4 +104,19 @@ class LoanController extends Controller
             'balance' => Loan::getLoanByID($request->input('loan_id'))->balance,
         ];
     }
+
+
+    public function close_loan(Request $request)
+    {
+
+        Loan::where('id', $request->input('loan_id'))->update([
+            'repayment_status_id' => RepaymentStatus::CLOSED,
+            'updated_at' => Carbon::now()->toDateTimeString(),
+            'updated_by' => $request->input('user_id'),
+        ]);
+
+        return [
+            'success' => true,
+        ];
+    }
 }
