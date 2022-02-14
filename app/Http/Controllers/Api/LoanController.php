@@ -91,4 +91,16 @@ class LoanController extends Controller
         }
         return $result;
     }
+
+
+    public function repayment_details(Request $request)
+    {
+
+        return [
+            'success' => true,
+            'mpesa_pabill' => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()->setting_value,
+            'account_number' => UserDetail::getUserByID($request->input('user_id'))->telephone,
+            'balance' => Loan::getLoanByID($request->input('loan_id'))->balance,
+        ];
+    }
 }

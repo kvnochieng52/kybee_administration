@@ -19,7 +19,8 @@ class UserDetail extends Model
                 'loan_distributions.min_amount',
                 'loan_distributions.max_amount',
                 'loan_distributions.period',
-                'loan_distributions.order'
+                'loan_distributions.order',
+                'users.telephone'
             ]);
     }
 
