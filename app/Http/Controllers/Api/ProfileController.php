@@ -132,7 +132,7 @@ class ProfileController extends Controller
             "employment_statuses" => EmploymentStatus::where('visible', 1)->get(['employment_status_name', 'id']),
             "salary_ranges" => SalaryRange::get(['salary_range', 'id']),
             "data" => !empty($user_details) ? $user_details : [],
-            "sms_messages_sender" =>  explode(",", Setting::where('code', 'SMS_MESSAGES_SENDER')->first()->setting_value)
+            "sms_messages_sender" =>  Setting::where('code', 'SMS_MESSAGES_SENDER')->first()->setting_value
         ];
     }
 
