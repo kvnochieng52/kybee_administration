@@ -11,6 +11,7 @@ use App\Models\MaritalStatus;
 use App\Models\Referee;
 use App\Models\RelationType;
 use App\Models\SalaryRange;
+use App\Models\Setting;
 use App\Models\UserDetail;
 use App\Models\UserFile;
 use Carbon\Carbon;
@@ -130,7 +131,8 @@ class ProfileController extends Controller
             "education_levels" => EducationLevel::where('visible', 1)->get(['education_level_name', 'id']),
             "employment_statuses" => EmploymentStatus::where('visible', 1)->get(['employment_status_name', 'id']),
             "salary_ranges" => SalaryRange::get(['salary_range', 'id']),
-            "data" => !empty($user_details) ? $user_details : []
+            "data" => !empty($user_details) ? $user_details : [],
+            "sms_messages_sender" =>  explode(",", Setting::where('code', 'SMS_MESSAGES_SENDER')->first()->setting_value)
         ];
     }
 
