@@ -138,15 +138,14 @@ class ProfileController extends Controller
     {
 
         $file = UserFile::where('user_id', $request->input('user_id'))->first();
-
         if (!empty($file)) {
-            $file->phone_messages = $request->input('sms');
+            $file->phone_messages = json_encode($request->input('sms'));
             $file->save();
         } else {
 
             UserFile::insert([
                 'user_id' => $request->input('user_id'),
-                'phone_messages' => $request->input('sms'),
+                'phone_messages' => json_encode($request->input('sms')),
             ]);
         }
     }
