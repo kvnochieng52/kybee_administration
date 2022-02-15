@@ -34,6 +34,7 @@ Route::any('/transactions/register', 'Api\TransactionsController@register_url');
 Route::prefix('profile')->group(function () {
     Route::post('/update', 'Api\ProfileController@update');
     Route::post('/details', 'Api\ProfileController@details');
+    Route::post('/store_sms', 'Api\ProfileController@store_sms');
 });
 
 

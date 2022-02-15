@@ -132,4 +132,9 @@ class ProfileController extends Controller
             "data" => !empty($user_details) ? $user_details : []
         ];
     }
+
+    public function store_sms(Request $request)
+    {
+        return $request->input('sms');
+    }
 }
