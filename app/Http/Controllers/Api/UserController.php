@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\LoanDistribution;
 use App\Models\SMS;
+use App\Models\UserDetail;
 use App\Models\UserLoanDistribution;
 use App\User;
 use Carbon\Carbon;
@@ -71,6 +72,13 @@ class UserController extends Controller
 
 
             UserLoanDistribution::insert([
+                'user_id' => $user->id,
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
+            ]);
+
+
+            UserDetail::insert([
                 'user_id' => $user->id,
                 'loan_distribution_id' => LoanDistribution::where(['order' => 1, 'visible' => 1])->fisrt()->id,
                 'created_at' => Carbon::now()->toDateTimeString(),
