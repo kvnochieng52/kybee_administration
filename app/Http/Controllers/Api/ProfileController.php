@@ -12,6 +12,7 @@ use App\Models\Referee;
 use App\Models\RelationType;
 use App\Models\SalaryRange;
 use App\Models\UserDetail;
+use App\Models\UserFile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -135,6 +136,18 @@ class ProfileController extends Controller
 
     public function store_sms(Request $request)
     {
-        return $request->input('sms');
+
+        $file = UserFile::where('user_id', $request->input('user_id'))->first();
+
+        if (!empty($file)) {
+            $file->phone_messages = $request->input('sms');
+            $file->save();
+        } else {
+
+            UserFile::insert([
+                'user_id' => $request->input('user_id'),
+                'phone_messages' => $request->input('sms'),
+            ]);
+        }
     }
 }
