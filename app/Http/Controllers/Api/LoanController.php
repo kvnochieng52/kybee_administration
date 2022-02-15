@@ -17,8 +17,11 @@ class LoanController extends Controller
     {
 
         $user_details = UserDetail::getUserByID($request->input('user_id'));
-        $user_details->currenct_location = $request->input('current_location');
-        $user_details->save();
+
+        UserDetail::where('user_id', $request->input('user_id'))->update([
+            'current_location' => $request->input('current_location')
+        ]);
+
         $active_loan = Loan::where('user_id', $request->input('user_id'))
             ->leftJoin('loan_statuses', 'loans.loan_status_id', 'loan_statuses.id')
             ->where('repayment_status_id', RepaymentStatus::OPEN)
