@@ -34,7 +34,9 @@ class AppSettingController extends Controller
     {
         return [
             "success" => true,
-            "data" => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()
+            "phone" => Setting::where(['code' => 'PHONE', 'active' => 1])->first()->setting_value,
+            "watsapp" => Setting::where(['code' => 'WATSAPP', 'active' => 1])->first()->setting_value,
+            "email" => Setting::where(['code' => 'EMAIL', 'active' => 1])->first()->setting_value,
         ];
     }
 }
