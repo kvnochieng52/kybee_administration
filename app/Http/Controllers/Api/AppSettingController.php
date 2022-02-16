@@ -27,4 +27,14 @@ class AppSettingController extends Controller
             "data" => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()
         ];
     }
+
+
+
+    public function get_contact_details(Request $request)
+    {
+        return [
+            "success" => true,
+            "data" => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()
+        ];
+    }
 }

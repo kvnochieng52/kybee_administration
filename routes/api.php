@@ -24,6 +24,7 @@ Route::post('/resend_verification', 'Api\UserController@resend_verification');
 
 Route::prefix('app_settings')->group(function () {
     Route::post('/get_settings', 'Api\AppSettingController@get_settings');
+    Route::post('/get_contact_details', 'Api\AppSettingController@get_contact_details');
 });
 /** MPESA routes */
 Route::any('/transactions/get_access_token', 'Api\TransactionsController@get_access_token');
