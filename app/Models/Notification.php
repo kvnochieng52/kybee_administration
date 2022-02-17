@@ -13,7 +13,7 @@ class Notification extends Model
             ->orderBy('created_at', 'DESC')
             ->get([
                 'notifications.*',
-                DB::raw("DATE_FORMAT(created_at, '%d-%M-%Y') AS created_formatted")
+                DB::raw("DATE_FORMAT(created_at, '%D-%M-%Y') AS created_formatted")
             ]);
     }
 }
