@@ -47,6 +47,11 @@ Route::prefix('loan')->group(function () {
     Route::post('/close_loan', 'Api\LoanController@close_loan');
 });
 
+
+Route::prefix('notification')->group(function () {
+    Route::post('/get', 'Api\NotificationController@get');
+});
+
 Route::middleware('jwt.auth')->get('/user', function (Request $request) {
     return $request->user();
 });
