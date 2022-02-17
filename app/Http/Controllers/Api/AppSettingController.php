@@ -39,4 +39,13 @@ class AppSettingController extends Controller
             "email" => Setting::where(['code' => 'EMAIL', 'active' => 1])->first()->setting_value,
         ];
     }
+
+
+    public function test(Request $request)
+    {
+        return [
+            "success" => true,
+            "name" => "kevin",
+        ];
+    }
 }
