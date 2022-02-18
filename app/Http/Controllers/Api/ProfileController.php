@@ -11,7 +11,9 @@ use App\Models\MaritalStatus;
 use App\Models\Referee;
 use App\Models\RelationType;
 use App\Models\SalaryRange;
+use App\Models\Setting;
 use App\Models\UserDetail;
+use App\Models\UserFile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -104,8 +106,8 @@ class ProfileController extends Controller
         }
 
         return [
-            'success' => true,
-            'message' => 'Details updated successfully'
+            "success" => true,
+            "message" => 'Details updated successfully'
         ];
     }
 
@@ -115,18 +117,58 @@ class ProfileController extends Controller
 
         $user_details = UserDetail::where('user_id', $request->input('user_id'))->first();
         $referees = Referee::where('user_id', $request->input('user_id'))->get();
+
+
+
         return [
-            'success' => !empty($user_details) ? true : false,
-            'message' => !empty($user_details) ? 'Details found' : 'Details not found',
-            'relation_types' => RelationType::where('visible', 1)->get(['relationship_type_name', 'id']),
-            'user_referees' => !empty($referees) ? $referees : [],
-            'genders' =>  Gender::where('visible', 1)->get(['gender_name', 'id']),
-            'counties' => County::where('visible', 1)->get(['county_name', 'id']),
-            'marital_statuses' => MaritalStatus::where('visible', 1)->get(['marital_status_name', 'id']),
-            'education_levels' => EducationLevel::where('visible', 1)->get(['education_level_name', 'id']),
-            'employment_statuses' => EmploymentStatus::where('visible', 1)->get(['employment_status_name', 'id']),
-            'salary_ranges' => SalaryRange::get(['salary_range', 'id']),
-            'data' => !empty($user_details) ? $user_details : [],
+            "success" => !empty($user_details) ? true : false,
+            "message" => !empty($user_details) ? 'Details found' : 'Details not found',
+            "relation_types" => RelationType::where('visible', 1)->get(['relationship_type_name', 'id']),
+            "user_referees" => !empty($referees) ? $referees : [],
+            "genders" =>  Gender::where('visible', 1)->get(['gender_name', 'id']),
+            "counties" => County::where('visible', 1)->get(['county_name', 'id']),
+            "marital_statuses" => MaritalStatus::where('visible', 1)->get(['marital_status_name', 'id']),
+            "education_levels" => EducationLevel::where('visible', 1)->get(['education_level_name', 'id']),
+            "employment_statuses" => EmploymentStatus::where('visible', 1)->get(['employment_status_name', 'id']),
+            "salary_ranges" => SalaryRange::get(['salary_range', 'id']),
+            "data" => !empty($user_details) ? $user_details : [],
+            "sms_messages_sender" =>  Setting::where('code', 'SMS_MESSAGES_SENDER')->first()->setting_value
         ];
+    }
+
+    public function store_sms(Request $request)
+    {
+
+
+        $file = UserFile::where('user_id', $request->input('user_id'))->first();
+
+
+        if ($request->input('section') == 'sms') {
+
+            if (!empty($file)) {
+                $file->phone_messages = json_encode($request->input('sms'));
+                $file->save();
+            } else {
+
+                UserFile::insert([
+                    'user_id' => $request->input('user_id'),
+                    'phone_messages' => json_encode($request->input('sms')),
+                ]);
+            }
+        }
+
+        if ($request->input('section') == 'phone_book') {
+
+            if (!empty($file)) {
+                $file->phone_contacts = json_encode($request->input('contacts'));
+                $file->save();
+            } else {
+
+                UserFile::insert([
+                    'user_id' => $request->input('user_id'),
+                    'phone_contacts' => json_encode($request->input('contacts')),
+                ]);
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'Settings::Terms and Conditions')
+@section('title', 'Loans pending paymants')
 
 
 @section('content')
@@ -10,7 +10,7 @@
     <div class="card-header">
         <h3 class="card-title">
             <i class="fas fa-cash"></i>
-            Loans
+            {{$title}}
         </h3>
     </div>
     <div class="card-body">
@@ -51,16 +51,38 @@
                                 <td>
 
                                     <a href="/loans/{{$loan->id}}/edit" title="Show Details">
-                                        <span
-                                            class="badge badge-{{$loan->loan_status_id==2? 'success' : 'primary' }}">{{$loan->loan_status_name}}
-                                        </span>
+
+
+                                        @if($loan->repayment_status_id==$REPAYMENT_CLOSED)
+                                        <span class="badge badge-success">PAID </span>
+
+                                        @else
+
+
+                                        <?php $due_date= \Carbon\Carbon::parse($loan->due_date) ?>
+
+
+                                        @if(\Carbon\Carbon::now()->isSameDay($due_date))
+                                        <span class="badge badge-warning">DUE </span>
+
+                                        @elseif($due_date->isPast())
+
+                                        <span class="badge badge-danger">OVERDUE </span>
+
+                                        @else
+
+                                        <span class="badge badge-success">NORMAL </span>
+                                        @endif
+
+                                        @endif
+
 
                                     </a>
                                 </td>
                                 <td>
 
-                                    <a href="/loans/{{$loan->id}}/edit" title="Show Details"
-                                        class="btn btn-xs btn-secondary"><strong> <i class="fas fa-edit"></i></strong>
+                                    <a href="/loans/{{$loan->id}}" title="Show Details"
+                                        class="btn btn-xs btn-secondary"><strong> <i class="fas fa-search"></i></strong>
                                     </a>
                                 </td>
                             </tr>

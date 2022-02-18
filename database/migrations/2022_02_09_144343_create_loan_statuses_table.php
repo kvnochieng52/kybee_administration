@@ -16,6 +16,8 @@ class CreateLoanStatusesTable extends Migration
         Schema::create('loan_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('loan_status_name')->nullable($value = true);
+            $table->text('description')->nullable($value = true);
+            $table->string('color_code')->nullable($value = true);
             $table->integer('visible')->nullable($value = true);
             $table->integer('created_by');
             $table->integer('updated_by');

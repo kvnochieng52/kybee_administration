@@ -32,6 +32,7 @@ class CreateUserDetailsTable extends Migration
             $table->text('company_address')->nullable($value = true);
             $table->bigInteger('county_id')->nullable($value = true);
             $table->text('home_address')->nullable($value = true);
+            $table->text('current_location')->nullable($value = true);
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->timestamps();

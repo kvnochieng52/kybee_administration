@@ -21,21 +21,21 @@ class Loan extends Model
         $disbursed = $total_loan_amount - ($intrest + $commission);
 
         return [
-            'total_loan_amount' => $total_loan_amount,
-            'intrest' => $intrest,
-            'commission' => $commission,
-            'disbursed' => $disbursed,
+            "total_loan_amount" => $total_loan_amount,
+            "intrest" => $intrest,
+            "commission" => $commission,
+            "disbursed" => $disbursed,
 
-            'total_loan_amount_formatted' => number_format($total_loan_amount),
-            'intrest_formatted' => number_format($intrest),
-            'commission_formatted' => number_format($commission),
-            'disbursed_formatted' => number_format($disbursed),
+            "total_loan_amount_formatted" => number_format($total_loan_amount),
+            "intrest_formatted" => number_format($intrest),
+            "commission_formatted" => number_format($commission),
+            "disbursed_formatted" => number_format($disbursed),
 
-            'application_date' => Carbon::now()->format("Y-m-d"),
-            'due_date' => Carbon::now()->addDays($loan->period)->format("Y-m-d"),
-            'application_date_formatted' => Carbon::now()->format("d-F-Y"),
-            'due_date_formatted' => Carbon::now()->addDays($loan->period)->format("d-F-Y"),
-            'loan_details' => $loan,
+            "application_date" => Carbon::now()->format("Y-m-d"),
+            "due_date" => Carbon::now()->addDays($loan->period)->format("Y-m-d"),
+            "application_date_formatted" => Carbon::now()->format("d-F-Y"),
+            "due_date_formatted" => Carbon::now()->addDays($loan->period)->format("d-F-Y"),
+            "loan_details" => $loan,
         ];
     }
 
@@ -98,5 +98,25 @@ class Loan extends Model
             ->leftJoin('repayment_statuses', 'loans.repayment_status_id', 'repayment_statuses.id')
             ->leftJoin('users', 'loans.user_id', 'users.id')
             ->leftJoin('user_details', 'loans.user_id', 'user_details.user_id');
+    }
+
+    public static function getLoanByID($ID)
+
+    {
+
+        return self::leftJoin('loan_statuses', 'loans.loan_status_id', 'loan_statuses.id')
+            ->leftJoin('repayment_statuses', 'loans.repayment_status_id', 'repayment_statuses.id')
+            ->leftJoin('users', 'loans.user_id', 'users.id')
+            ->leftJoin('user_details', 'loans.user_id', 'user_details.user_id')
+            ->where('loans.id', $ID)
+            ->first([
+                'loans.*',
+                'loan_statuses.loan_status_name',
+                'repayment_statuses.repayment_status_name',
+                'users.telephone',
+                'user_details.first_name',
+                'user_details.middle_name',
+                'user_details.last_name',
+            ]);
     }
 }

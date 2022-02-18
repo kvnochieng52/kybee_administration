@@ -255,12 +255,82 @@ return [
 
         [
             'text'    => 'Settings',
-            'icon'    => 'fas fa-fw fa-server',
+            'icon'    => 'fas fa-fw fa-cog',
             'submenu' => [
 
                 [
                     'text' => 'Terms and Conditions',
                     'url'  => 'settings/terms_and_conditions',
+                ],
+
+
+
+
+
+            ],
+            // 'can' => 'Manage Categories'
+
+        ],
+
+
+        [
+            'text'    => 'Loan Requests',
+            'icon'    => 'fas fa-fw fa-money-bill',
+            'submenu' => [
+
+                [
+                    'text' => 'Pending Approval',
+                    'url'  => 'loan/1/status',
+                ],
+
+                [
+                    'text' => 'Approved',
+                    'url'  => 'loan/2/status',
+                ],
+
+                [
+                    'text' => 'Declined',
+                    'url'  => 'loan/3/status',
+                ],
+
+                [
+                    'text' => 'Sent',
+                    'url'  => 'loan/4/status',
+                ],
+
+
+
+
+            ],
+            // 'can' => 'Manage Categories'
+
+        ],
+
+
+        [
+            'text'    => 'Loan Repayments',
+            'icon'    => 'fas fa-fw fa-coins',
+            'submenu' => [
+
+                [
+                    'text' => 'Pending Repayments',
+                    'url'  => 'loan/pending_repayment',
+                ],
+
+                [
+                    'text' => 'Due',
+                    'url'  => 'loan/due',
+                ],
+
+
+                [
+                    'text' => 'Overdue',
+                    'url'  => 'loan/over_due',
+                ],
+
+                [
+                    'text' => 'Paid',
+                    'url'  => 'loan/paid',
                 ],
 
 

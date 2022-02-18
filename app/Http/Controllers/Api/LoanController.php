@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\LoanDistribution;
+use App\Models\RepaymentStatus;
 use App\Models\Setting;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class LoanController extends Controller
 {
@@ -15,13 +17,38 @@ class LoanController extends Controller
     {
 
         $user_details = UserDetail::getUserByID($request->input('user_id'));
-        return [
-            'success' => true,
-            'loan_distributions' => LoanDistribution::where(['visible' => 1])->orderBy('order', 'DESC')->get(),
-            'user_details' => $user_details,
-            'currency' => Setting::where('code', 'CURRENCY')->where('active', 1)->first()->setting_value,
-            'default_loan' => Loan::calculateLoan($user_details->loan_distribution_id),
-        ];
+
+        UserDetail::where('user_id', $request->input('user_id'))->update([
+            'current_location' => $request->input('current_location')
+        ]);
+
+        $active_loan = Loan::where('user_id', $request->input('user_id'))
+            ->leftJoin('loan_statuses', 'loans.loan_status_id', 'loan_statuses.id')
+            ->where('repayment_status_id', RepaymentStatus::OPEN)
+            ->first([
+                'loans.*',
+                'loan_statuses.loan_status_name',
+                'loan_statuses.description',
+                'loan_statuses.color_code',
+                'loan_statuses.id AS loan_status_id',
+            ]);
+        if (!empty($active_loan)) {
+            $active_loan->total_amount_formatted =  number_format(round($active_loan->total_amount));
+            $active_loan->application_date_formatted = Carbon::parse($active_loan->application_date)->format("d-F-Y");
+            $active_loan->due_date_formatted = Carbon::parse($active_loan->due_date)->format("d-F-Y");
+            $active_loan->balance_formatted =  number_format(round($active_loan->balance));
+            $active_loan->amount_paid_formatted =  number_format(round($active_loan->amount_paid));
+        }
+
+        return response()->json([
+            "success" => true,
+            "loan_distributions" => LoanDistribution::where(['visible' => 1])->orderBy('order', 'DESC')->get(),
+            "user_details" => $user_details,
+            "currency" => Setting::where('code', 'CURRENCY')->where('active', 1)->first()->setting_value,
+            "default_loan" => Loan::calculateLoan($user_details->loan_distribution_id),
+            "active_loan" => !empty($active_loan) ? true : false,
+            "active_loan_details" => $active_loan,
+        ]);
     }
 
 
@@ -29,7 +56,7 @@ class LoanController extends Controller
     {
         return [
             'success' => true,
-            'loan_details' => Loan::calculateLoan($request->input('distribution_id')),
+            'loan_details' => Loan::calculateLoan($request->input('distribution_id'))
         ];
     }
 
@@ -69,5 +96,32 @@ class LoanController extends Controller
             $result['message'] = "Complete Profile to Apply for a loan.";
         }
         return $result;
+    }
+
+
+    public function repayment_details(Request $request)
+    {
+
+        return [
+            'success' => true,
+            'mpesa_paybill' => Setting::where(['code' => $request->input('code'), 'active' => 1])->first()->setting_value,
+            'account_number' => UserDetail::getUserByID($request->input('user_id'))->telephone,
+            'balance' => Loan::getLoanByID($request->input('loan_id'))->balance,
+        ];
+    }
+
+
+    public function close_loan(Request $request)
+    {
+
+        Loan::where('id', $request->input('loan_id'))->update([
+            'repayment_status_id' => RepaymentStatus::CLOSED,
+            'updated_at' => Carbon::now()->toDateTimeString(),
+            'updated_by' => $request->input('user_id'),
+        ]);
+
+        return [
+            'success' => true,
+        ];
     }
 }
