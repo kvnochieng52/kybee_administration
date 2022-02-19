@@ -96,7 +96,7 @@ class Loan extends Model
     {
         return self::leftJoin('loan_statuses', 'loans.loan_status_id', 'loan_statuses.id')
             ->leftJoin('repayment_statuses', 'loans.repayment_status_id', 'repayment_statuses.id')
-            //->leftJoin('users', 'loans.user_id', 'users.id')
+            ->leftJoin('users', 'loans.user_id', 'users.id')
             ->leftJoin('user_details', 'loans.user_id', 'user_details.user_id');
     }
 
