@@ -348,8 +348,9 @@ class TransactionsController extends Controller
             /** Get user phone number based on the user_id */
 
             $user = User::where('id', $active_loans->user_id)->first();
+            $PhoneNumber = $user->ext_phone;
             /** Append 254 */
-            $PhoneNumber = SMS::clean_phone_number($user->telephone);
+            //$PhoneNumber = SMS::clean_phone_number($user->ext_phone);
             // $PhoneNumber = "254708823158";
             $Amount = $active_loans->disbursed;
             $B2CEnvironment = env('MPESA_B2C_ENV');
