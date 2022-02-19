@@ -98,7 +98,7 @@ class LoanController extends Controller
                     'relation_types.relationship_type_name'
                 ]),
             'loans' => Loan::getLoans()->where('loans.user_id', $loan_details->id)->get(),
-            'user_file' => UserFile::where('user_id', $loan_details->id)->first(),
+            'user_file' => UserFile::where('user_id', $loan_details->user_id)->first(),
         ]);
     }
 
