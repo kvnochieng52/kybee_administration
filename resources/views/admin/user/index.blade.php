@@ -46,16 +46,18 @@
                             {!!
                             Form::open(['action'=>['Admin\\UserController@destroy',$user->id],'method'=>'POST','class'=>'floatit','enctype'=>'multipart/form-data'])
                             !!}
-                            {{-- @can('Edit User') --}}
+                            @can('Edit User')
                             <a href="{{url('/')}}/admin/users/{{$user->id}}/edit" title="Edit Details"
-                                class="btn btn-xs btn-info"><strong> <i class="fas fa-edit"></i></strong> </a>
-                            {{-- @endcan --}}
+                                class="btn btn-xs btn-info"><strong> <i class="fas fa-edit"></i></strong> </a> &nbsp;
+                            <a href="{{url('/')}}/admin/users/{{$user->id}}" title="Edit Details"
+                                class="btn btn-xs btn-info"><strong> <i class="fas fa-info"></i></strong> </a>
+                            @endcan
                             {{Form::hidden('_method','DELETE')}}
-                            {{-- @can('Delete User') --}}
+                            @can('Delete User')
                             <button type="submit" class="btn btn-secondary btn-xs btn-flat"
                                 onClick="return confirm('Are you sure you want to delete this User?');"> <strong>
                                     <strong> <i class="fas fa-trash"></i></strong></button>
-                            {{-- @endcan --}}
+                            @endcan
 
 
 

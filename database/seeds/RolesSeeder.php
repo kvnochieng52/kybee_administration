@@ -14,22 +14,16 @@ class RolesSeeder extends Seeder
     {
         DB::table('roles')->insert([
             [
-                'group_name' => 'Admin',
+                'name' => 'Customer',
                 'guard_name' => 'web',
-
             ], [
-                'group_name' => 'Supervisor',
+                'name' => 'Supervisor',
                 'guard_name' => 'web',
-
             ], [
-                'group_name' => 'Field Officer',
+                'name' => 'Admin',
                 'guard_name' => 'web',
 
-            ], [
-                'group_name' => 'Standard',
-                'guard_name' => 'web',
-
-            ]
+            ],
 
         ]);
     }

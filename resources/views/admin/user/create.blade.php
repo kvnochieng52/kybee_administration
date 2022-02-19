@@ -20,8 +20,7 @@ user_form','enctype'=>'multipart/form-data'])
             <div class="col-md-12">
                 {{Form::label('full_names', 'Full Names* ')}}
                 <div class="form-group">
-                    {{Form::text('full_names', '',['class'=>'form-control', 'placeholder'=>'User Full Names',
-                    'required'=>'required'])}}
+                    {{Form::text('full_names', '',['class'=>'form-control', 'placeholder'=>'User Full Names', 'required'=>'required'])}}
                 </div>
             </div>
 
@@ -34,33 +33,21 @@ user_form','enctype'=>'multipart/form-data'])
             <div class="col-md-4">
                 {{Form::label('email', 'Email')}}
                 <div class="form-group">
-                    {{Form::email('email', '',['class'=>'form-control', 'placeholder'=>'Enter The user Email',
-                    'required'=>'required'])}}
+                    {{Form::email('email', '',['class'=>'form-control', 'placeholder'=>'Enter The user Email', 'required'=>'required'])}}
                 </div>
             </div>
 
             <div class="col-md-4">
                 {{Form::label('password', 'Password* ')}}
                 <div class="form-group">
-                    {{Form::password('password',['class'=>'form-control', 'placeholder'=>'Enter a strong Password',
-                    'required'=>'required'])}}
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                {{Form::label('password_confirmation', 'Confirm Password* ')}}
-                <div class="form-group">
-                    {{Form::password('password_confirmation',['class'=>'form-control', 'placeholder'=>'Enter a strong
-                    Password',
-                    'required'=>'required'])}}
+                    {{Form::password('password',['class'=>'form-control', 'placeholder'=>'Enter a strong Password', 'required'=>'required'])}}
                 </div>
             </div>
 
             <div class="col-md-4">
                 {{Form::label('telephone', 'Telephone* ')}}
                 <div class="form-group">
-                    {{Form::text('telephone', '',['class'=>'form-control', 'placeholder'=>'User Telephpone',
-                    'required'=>'required'])}}
+                    {{Form::text('telephone', '',['class'=>'form-control', 'placeholder'=>'User Telephpone', 'required'=>'required'])}}
                 </div>
             </div>
         </div>
@@ -72,24 +59,11 @@ user_form','enctype'=>'multipart/form-data'])
                 {{Form::label('role', 'Role')}}
 
                 <div class="form-group">
-                    {{ Form::select('role', $roles,null, ['class' =>
-                    'form-control','placeholder'=>'--None--','required'=>'required']) }}
+                    {{ Form::select('role', $roles,null, ['class' => 'form-control','placeholder'=>'--None--','required'=>'required']) }}
                 </div>
 
             </div>
 
-
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    {{Form::label('business', 'Select Business(if Distributor, Retailer, Sales Agent,
-                    showroom)',['class'=>'control-label'])}}
-                    {{ Form::select('business', $businesses,null,
-                    ['style'=>'width:100%','class' =>
-                    'select2
-                    form-control','placeholder'=>'--Specify--']) }}
-                </div>
-            </div>
 
 
 
@@ -98,8 +72,7 @@ user_form','enctype'=>'multipart/form-data'])
                 {{Form::label('is_active', 'Active*')}}
 
                 <div class="form-group">
-                    {{ Form::select('is_active', ['in Active', 'Active'],null, ['class' =>
-                    'form-control','placeholder'=>'--Select--','required'=>'required']) }}
+                    {{ Form::select('is_active', ['in Active', 'Active'],null, ['class' => 'form-control','placeholder'=>'--Select--','required'=>'required']) }}
                 </div>
 
             </div>
@@ -112,7 +85,7 @@ user_form','enctype'=>'multipart/form-data'])
 
 
 
-        <button type="submit" class="btn btn-secondary">SUBMIT DETAILS</button>
+        <button type="submit" class="btn btn-primary btn-flat">SUBMIT DETAILS</button>
 
 
 
@@ -132,7 +105,7 @@ user_form','enctype'=>'multipart/form-data'])
 <script>
     $(function () {
 
-        $('.select2').select2();
+        $('.slelct2').select2({});
         
       $('.user_form')
             .bootstrapValidator({

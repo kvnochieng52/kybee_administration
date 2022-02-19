@@ -13,34 +13,22 @@ class PermissionsSeeder extends Seeder
     public function run()
     {
         DB::table('permissions')->insert([
+
+            //LOAN REQUESTS PERMISSIONS
             [
-                'name' => 'Create Product',
+                'name' => 'Create Loan Requests',
                 'guard_name' => 'web',
                 'p_group' => '1',
 
             ],
 
             [
-                'name' => 'View Products',
+                'name' => 'View Loan Requests',
                 'guard_name' => 'web',
                 'p_group' => '1',
 
             ], [
-                'name' => 'View All Products',
-                'guard_name' => 'web',
-                'p_group' => '1',
-
-            ],
-
-            [
-                'name' => 'Edit Product',
-                'guard_name' => 'web',
-                'p_group' => '1',
-
-            ],
-
-            [
-                'name' => 'Delete Product',
+                'name' => 'Edit Loan Requests',
                 'guard_name' => 'web',
                 'p_group' => '1',
 
@@ -48,66 +36,49 @@ class PermissionsSeeder extends Seeder
 
 
             [
-                'name' => 'Create business',
+                'name' => 'Delete Loan Requests',
+                'guard_name' => 'web',
+                'p_group' => '1',
+
+            ],
+
+            //LOAN REPAYMENTS PERMISSIONS
+
+
+            [
+                'name' => 'Create Loan Repayment',
                 'guard_name' => 'web',
                 'p_group' => '2',
 
             ],
 
             [
-                'name' => 'View business',
-                'guard_name' => 'web',
-                'p_group' => '2',
-
-            ], [
-                'name' => 'View All business',
+                'name' => 'View Loan Repayment',
                 'guard_name' => 'web',
                 'p_group' => '2',
 
             ],
 
             [
-                'name' => 'Edit business',
+                'name' => 'Edit Loan Repayment',
                 'guard_name' => 'web',
                 'p_group' => '2',
 
             ],
 
             [
-                'name' => 'Delete business',
+                'name' => 'Delete Loan Repayment',
                 'guard_name' => 'web',
                 'p_group' => '2',
 
             ],
 
-            [
-                'name' => 'Create Customer',
-                'guard_name' => 'web',
-                'p_group' => '3',
 
-            ],
+            //SETTINGS PERMISSIONS
+
 
             [
-                'name' => 'View Customers',
-                'guard_name' => 'web',
-                'p_group' => '3',
-
-            ], [
-                'name' => 'View All Customers',
-                'guard_name' => 'web',
-                'p_group' => '3',
-
-            ],
-
-            [
-                'name' => 'Edit Customer',
-                'guard_name' => 'web',
-                'p_group' => '3',
-
-            ],
-
-            [
-                'name' => 'Delete Customer',
+                'name' => 'Manage Settings',
                 'guard_name' => 'web',
                 'p_group' => '3',
 
@@ -115,130 +86,39 @@ class PermissionsSeeder extends Seeder
 
 
 
-
-
-            [
-                'name' => 'Create Job Card',
-                'guard_name' => 'web',
-                'p_group' => '4',
-
-            ],
-
-            [
-                'name' => 'View Job Cards',
-                'guard_name' => 'web',
-                'p_group' => '4',
-
-            ], [
-                'name' => 'View All Job Cards',
-                'guard_name' => 'web',
-                'p_group' => '4',
-
-            ],
-
-            [
-                'name' => 'Edit Job Card',
-                'guard_name' => 'web',
-                'p_group' => '4',
-
-            ],
-
-            [
-                'name' => 'Delete Job Card',
-                'guard_name' => 'web',
-                'p_group' => '4',
-
-            ],
-
-
-
-
-
-
-            [
-                'name' => 'Manage Categories',
-                'guard_name' => 'web',
-                'p_group' => '5',
-
-            ],
-
-            [
-                'name' => 'Manage Product Types',
-                'guard_name' => 'web',
-                'p_group' => '5',
-
-            ], [
-                'name' => 'Manage Product Models',
-                'guard_name' => 'web',
-                'p_group' => '5',
-
-            ],
-
-            [
-                'name' => 'Manage Districts',
-                'guard_name' => 'web',
-                'p_group' => '5',
-
-            ],
-
-            [
-                'name' => 'Manage Towns',
-                'guard_name' => 'web',
-                'p_group' => '5',
-
-            ],
-
-
-
-            [
-                'name' => 'Product Reports',
-                'guard_name' => 'web',
-                'p_group' => '6',
-
-            ],
-
-
-            [
-                'name' => 'Business Reports',
-                'guard_name' => 'web',
-                'p_group' => '6',
-
-            ],
-
-
-
+            //USER PERMISSIONS
 
 
             [
                 'name' => 'Create User',
                 'guard_name' => 'web',
-                'p_group' => '7',
+                'p_group' => '4',
 
             ],
 
             [
                 'name' => 'View Users',
                 'guard_name' => 'web',
-                'p_group' => '7',
+                'p_group' => '4',
 
             ], [
                 'name' => 'View All Users',
                 'guard_name' => 'web',
-                'p_group' => '7',
+                'p_group' => '4',
 
             ],
 
             [
                 'name' => 'Edit User',
                 'guard_name' => 'web',
-                'p_group' => '7',
+                'p_group' => '4',
 
             ],
 
             [
                 'name' => 'Delete User',
                 'guard_name' => 'web',
-                'p_group' => '7',
+                'p_group' => '4',
 
             ],
 

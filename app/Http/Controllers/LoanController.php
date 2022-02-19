@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Loan;
 use App\Models\LoanRepayment;
 use App\Models\LoanStatus;
+use App\Models\Notification;
+use App\Models\Referee;
 use App\Models\RepaymentStatus;
+use App\Models\UserDetail;
+use App\Models\UserFile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoanController extends Controller
 {
@@ -27,7 +32,7 @@ class LoanController extends Controller
                 'user_details.first_name',
                 'user_details.middle_name',
                 'user_details.last_name',
-            ])->paginate(15)
+            ])->get()
         ]);
     }
 
@@ -71,7 +76,7 @@ class LoanController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {;
+    {
     }
 
     /**
@@ -82,10 +87,18 @@ class LoanController extends Controller
      */
     public function edit($id)
     {
+        $loan_details = Loan::getLoanByID($id);
         return view('loans.edit')->with([
-            'loan' => Loan::getLoanByID($id),
-            'loan_statuses' => LoanStatus::WhereIn('id', [LoanStatus::APPROVED, LoanStatus::DECLINED, LoanStatus::PENDING_APPROVAL])->pluck('loan_status_name', 'id')
-
+            'loan' => $loan_details,
+            'loan_statuses' => LoanStatus::WhereIn('id', [LoanStatus::APPROVED, LoanStatus::DECLINED, LoanStatus::PENDING_APPROVAL])->pluck('loan_status_name', 'id'),
+            'user_details' => UserDetail::getUserByID($loan_details->user_id),
+            'referees' => Referee::where('user_id', $loan_details->id)
+                ->leftJoin('relation_types', 'referees.relationship_type_id', 'relation_types.id')->get([
+                    'referees.*',
+                    'relation_types.relationship_type_name'
+                ]),
+            'loans' => Loan::getLoans()->where('loans.user_id', $loan_details->id)->get(),
+            'user_file' => UserFile::where('user_id', $loan_details->id)->first(),
         ]);
     }
 
@@ -105,7 +118,21 @@ class LoanController extends Controller
 
         $loan = Loan::find($id);
         $loan->loan_status_id = $request->input('approve_decline');
+        $loan->updated_by = $request->input('user_id');
+        $loan->updated_at = Carbon::now()->toDateTimeString();
         $loan->save();
+
+
+        if (!empty($request->input('reason'))) {
+            Notification::insert([
+                'user_id' => $loan->user_id,
+                'message' => $request->input('reason'),
+                'updated_by' => Auth::user()->id,
+                'created_by' => Auth::user()->id,
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
+            ]);
+        }
 
         return redirect('loan/' . LoanStatus::PENDING_APPROVAL . '/status')->with('success', 'Details updated successfully');
     }

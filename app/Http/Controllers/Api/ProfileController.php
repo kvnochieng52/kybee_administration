@@ -14,6 +14,7 @@ use App\Models\SalaryRange;
 use App\Models\Setting;
 use App\Models\UserDetail;
 use App\Models\UserFile;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -42,6 +43,10 @@ class ProfileController extends Controller
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'updated_at' => Carbon::now()->toDateTimeString(),
             ]);
+
+            User::where('id', $request->input('user_id'))->update([
+                'email' => $request->input('email'),
+            ]);
         } else {
 
 
@@ -58,6 +63,10 @@ class ProfileController extends Controller
                         'gender_id' => $request->input('gender'),
                         'updated_by' => $request->input('user_id'),
                         'updated_at' => Carbon::now()->toDateTimeString(),
+                    ]);
+
+                    User::where('id', $request->input('user_id'))->update([
+                        'email' => $request->input('email'),
                     ]);
                     break;
                 case "contacts":

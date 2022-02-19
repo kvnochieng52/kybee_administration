@@ -3,11 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business;
+use App\Models\County;
+use App\Models\EducationLevel;
+use App\Models\EmploymentStatus;
 use App\Models\Franchise;
+use App\Models\Gender;
+use App\Models\Loan;
+use App\Models\LoanDistribution;
+use App\Models\MaritalStatus;
 use App\Models\PermissionGroup;
+use App\Models\Referee;
+use App\Models\SalaryRange;
+use App\Models\SMS;
+use App\Models\UserDetail;
+use App\Models\UserFile;
 use App\Models\UserFranchise;
+use App\Models\UserLoanDistribution;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -57,8 +70,6 @@ class UserController extends Controller
         return view('admin.user.create')->with([
             'roles'  => DB::table('roles')->pluck('name', 'id')->all(),
             'perm_groups' => PermissionGroup::getPermissionsWithGroup(),
-            'businesses' => Business::pluck('business_name', 'id'),
-
         ]);
     }
 
@@ -74,7 +85,7 @@ class UserController extends Controller
         $this->validate($request, [
             'full_names' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed',
+            'password' => 'required',
         ]);
         $user = new User;
         $user->name = $request->input('full_names');
@@ -82,7 +93,6 @@ class UserController extends Controller
         $user->password = Hash::make($request->input('password'));
         $user->telephone = $request->input('telephone');
         $user->is_active = $request->input('is_active');
-        $user->business_id = $request->input('business');
         $user->created_by = Auth::user()->id;
         $user->updated_by = Auth::user()->id;
         $user->has_reset_password = 0;
@@ -122,7 +132,20 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+
+        $user_file = UserFile::where('user_id', $user->id)->first();
+
+        return view('admin.user.show')->with([
+            'user_details' => UserDetail::getUserByID($user->id),
+            'referees' => Referee::where('user_id', $user->id)
+                ->leftJoin('relation_types', 'referees.relationship_type_id', 'relation_types.id')->get([
+                    'referees.*',
+                    'relation_types.relationship_type_name'
+                ]),
+            'loans' => Loan::getLoans()->where('loans.user_id', $user->id)->get(),
+            'user_file' => UserFile::where('user_id', $user->id)->first(),
+
+        ]);
     }
 
     /**
@@ -140,7 +163,6 @@ class UserController extends Controller
             ->first([
                 'users.email',
                 'users.id',
-                'users.business_id',
                 'users.name as user_full_names',
                 'users.created_at',
                 'roles.id as role',
@@ -162,28 +184,24 @@ class UserController extends Controller
 
         );
 
-
-
-        // $roles =  DB::table('model_has_permissions')->where(['model_id' => $user->id])->pluck('permission_id')->all(),
-        // echo "<pre>";
-
-        // print_r($roles);
-        // exit;
-
-        // print_r($user_permissions);
-        // exit;
-
-
-
-
+        $get_current_limit = UserLoanDistribution::where('user_id', $user->id)->first();
         return view('admin.user.edit')->with([
             'roles'  => DB::table('roles')->pluck('name', 'id')->all(),
             'user'  => $user,
+            'user_details'  => UserDetail::getUserByID($user->id),
+            'current_user_limit' => (!empty($get_current_limit)) ? $get_current_limit->loan_distribution_id : 1,
             'perm_groups' => PermissionGroup::getPermissionsWithGroup(),
             'user_permissions' => $user_permissions,
             'user_role' => $user_role,
-            'businesses' => Business::pluck('business_name', 'id'),
-            // 'user_permissions' => DB::table('model_has_permissions')->where(['model_id' => $user->id])->pluck('permission_id')->all(),
+            "genders" =>  Gender::where('visible', 1)->pluck('gender_name', 'id'),
+            "counties" => County::where('visible', 1)->pluck('county_name', 'id'),
+            "marital_statuses" => MaritalStatus::where('visible', 1)->pluck('marital_status_name', 'id'),
+            "education_levels" => EducationLevel::where('visible', 1)->pluck('education_level_name', 'id'),
+            "employment_statuses" => EmploymentStatus::where('visible', 1)->pluck('employment_status_name', 'id'),
+            "salary_ranges" => SalaryRange::pluck('salary_range', 'id'),
+            "loan_limits" =>  LoanDistribution::where('visible', 1)
+                ->select(DB::raw("CONCAT('Ksh ',FORMAT(max_amount,0)) AS formatted_amount"), 'id')
+                ->pluck('formatted_amount', 'id'),
         ]);
     }
 
@@ -196,52 +214,102 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $this->validate($request, [
-            'full_names' => 'required',
-            'email' => 'required|email',
-            'password' => 'confirmed'
-        ]);
 
-        $user->name = $request->input('full_names');
-        $user->email = $request->input('email');
-        $user->telephone = $request->input('telephone');
-        $user->is_active = $request->input('is_active');
-        $user->has_reset_password = 0;
-        $user->business_id = $request->input('business');
-
-        if (!empty($request->input('password'))) {
-            $user->password = Hash::make($request->input('password'));
-        }
-        $user->updated_by = Auth::user()->id;
-        $user->save();
-
-        DB::table('model_has_roles')->where('model_id', $user->id)->delete();
-        if (!empty($request->input('role'))) {
-
-            DB::table('model_has_roles')->insert([
-                'role_id' => $request->input('role'),
-                'model_type' => 'App\User',
-                'model_id' => $user->id
-            ]);
-        }
-        DB::table('model_has_permissions')->where('model_id', $user->id)->delete();
-
-        if ((!empty($request->input('permissions')) && count($request->input('permissions')) > 0) && empty($request->input('role'))) {
-
-            foreach ($request->input('permissions') as $permission) {
-                DB::table('model_has_permissions')->insert([
-                    'permission_id' => $permission,
-                    'model_type' => 'App\User',
-                    'model_id' => $user->id
+        switch ($request->input('section')) {
+            case "basic_details":
+                UserDetail::where('user_id', $user->id)->update([
+                    'first_name' => $request->input('first_name'),
+                    'middle_name' => $request->input('middle_name'),
+                    'last_name' => $request->input('last_name'),
+                    'id_number' => $request->input('id_number'),
+                    'email' => $request->input('email'),
+                    // 'telephone' => $request->input('telephone'),
+                    'date_of_birth' => Carbon::parse($request->input('date_of_birth'))->format("Y-m-d"),
+                    'gender_id' => $request->input('gender'),
+                    'marital_status_id' => $request->input('marital_status'),
+                    'education_level_id' => $request->input('education_level'),
+                    'employment_status_id' => $request->input('employment_status'),
+                    'salary_range' => $request->input('salary_range'),
+                    'company_county_id' => $request->input('company_county'),
+                    'company_address' => $request->input('company_address'),
+                    'county_id' => $request->input('county'),
+                    'home_address' => $request->input('home_address'),
+                    'updated_by' => Auth::user()->id,
+                    'updated_at' => Carbon::now()->toDateTimeString(),
                 ]);
-            }
+
+                break;
+            case "loan_limit":
+                $this->validate($request, [
+                    'loan_limit' => 'required',
+                ]);
+
+                $get_current_limit = UserLoanDistribution::where('user_id', $user->id)->first();
+
+                if (!empty($get_current_limit)) {
+                    $get_current_limit->loan_distribution_id = $request->input('loan_limit');
+                    $get_current_limit->updated_at = Carbon::now()->toDateTimeString();
+                    $get_current_limit->save();
+                } else {
+                    UserLoanDistribution::insert([
+                        'user_id' => $user->id,
+                        'loan_distribution_id' => $request->input('loan_limit'),
+                        'created_at' => Carbon::now()->toDateTimeString(),
+                        'updated_at' => Carbon::now()->toDateTimeString(),
+                    ]);
+                }
+
+                break;
+            case "security":
+                $this->validate($request, [
+                    'full_names' => 'required',
+                    'email' => 'required|email',
+                ]);
+
+                $user->name = $request->input('full_names');
+                $user->email = $request->input('email');
+                $user->telephone = $request->input('telephone');
+                $user->ext_phone = SMS::clean_phone_number($request->input('telephone'));
+                $user->is_active = $request->input('is_active');
+                $user->has_reset_password = 0;
+
+                if (!empty($request->input('password'))) {
+                    $user->password = Hash::make($request->input('password'));
+                }
+                $user->updated_by = Auth::user()->id;
+                $user->save();
+
+                DB::table('model_has_roles')->where('model_id', $user->id)->delete();
+                if (!empty($request->input('role'))) {
+
+                    DB::table('model_has_roles')->insert([
+                        'role_id' => $request->input('role'),
+                        'model_type' => 'App\User',
+                        'model_id' => $user->id
+                    ]);
+                }
+                DB::table('model_has_permissions')->where('model_id', $user->id)->delete();
+
+                if ((!empty($request->input('permissions')) && count($request->input('permissions')) > 0) && empty($request->input('role'))) {
+
+                    foreach ($request->input('permissions') as $permission) {
+                        DB::table('model_has_permissions')->insert([
+                            'permission_id' => $permission,
+                            'model_type' => 'App\User',
+                            'model_id' => $user->id
+                        ]);
+                    }
+                }
+
+                Artisan::call('permission:cache-reset');
+                //Alert::toast('User Successfully Updated', 'success');
+                break;
         }
 
 
 
 
-        Artisan::call('permission:cache-reset');
-        //Alert::toast('User Successfully Updated', 'success');
+
         return redirect('admin/users/' . $user->id . '/edit')->with('success', 'User Edited');
     }
 

@@ -33,5 +33,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('settings')->group(function () {
         Route::get('/terms_and_conditions', 'SettingController@terms_conditions');
         Route::post('/terms_conditions_process', 'SettingController@terms_conditions_process');
+
+        Route::get('/configurations_get', 'SettingController@configurations_get');
+        Route::get('/{config_id}/edit', 'SettingController@edit');
+        Route::post('/update', 'SettingController@update');
+    });
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/roles/create', 'Admin\\UserController@role_create');
+        Route::get('/roles/', 'Admin\\UserController@role_index');
+        Route::get('/roles/{role_id}/edit', 'Admin\\UserController@role_edit');
+        Route::post('/roles/destroy_role', 'Admin\\UserController@destroy_role');
+        Route::post('/roles/role_store', 'Admin\\UserController@role_store');
+        Route::post('/roles/update_role', 'Admin\\UserController@update_role');
+        Route::resource('/users', 'Admin\\UserController');
     });
 });

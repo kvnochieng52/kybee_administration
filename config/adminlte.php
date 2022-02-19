@@ -247,32 +247,6 @@ return [
             //'label_color' => 'warning',
         ],
 
-
-
-
-
-
-
-        [
-            'text'    => 'Settings',
-            'icon'    => 'fas fa-fw fa-cog',
-            'submenu' => [
-
-                [
-                    'text' => 'Terms and Conditions',
-                    'url'  => 'settings/terms_and_conditions',
-                ],
-
-
-
-
-
-            ],
-            // 'can' => 'Manage Categories'
-
-        ],
-
-
         [
             'text'    => 'Loan Requests',
             'icon'    => 'fas fa-fw fa-money-bill',
@@ -302,7 +276,7 @@ return [
 
 
             ],
-            // 'can' => 'Manage Categories'
+            'can' => 'View Loan Requests'
 
         ],
 
@@ -337,7 +311,31 @@ return [
 
 
             ],
-            // 'can' => 'Manage Categories'
+            'can' => 'View Loan Repayment'
+
+        ],
+
+        [
+            'text'    => 'Settings',
+            'icon'    => 'fas fa-fw fa-cog',
+            'submenu' => [
+
+                [
+                    'text' => 'Terms and Conditions',
+                    'url'  => 'settings/terms_and_conditions',
+                ],
+
+                [
+                    'text' => 'Configurations',
+                    'url'  => 'settings/configurations_get',
+                ],
+
+
+
+
+
+            ],
+            'can' => 'Manage Settings'
 
         ],
 
@@ -365,8 +363,9 @@ return [
 
 
             ],
-            // 'can' => ['Create User'],
+            'can' => ['Create User'],
         ],
+
 
 
 

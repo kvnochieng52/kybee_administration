@@ -16,6 +16,39 @@ class SettingController extends Controller
         ]);
     }
 
+    public function configurations_get(Request $request)
+    {
+        return view('settings.configurations')->with([
+            'configurations' => Setting::where('code', '!=', Setting::TERMS_CODE)->get(),
+        ]);
+    }
+
+
+    public function edit($config_id)
+    {
+        return view('settings.configurations_edit')->with([
+            'setting' => Setting::where('id', $config_id)->first(),
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $this->validate($request, [
+            'setting_name' => 'required',
+            'setting_value' => 'required',
+            'active' => 'required',
+        ]);
+
+        Setting::where('id', $request->input('setting_id'))->update([
+            'setting_name' => $request->input('setting_name'),
+            'setting_value' => $request->input('setting_value'),
+            'updated_by' => Auth::user()->id,
+            'updated_at' => Carbon::now()->toDateTimeString(),
+        ]);
+
+        return redirect('/settings/configurations_get')->with('success', 'Configuration updated Successfully');
+    }
+
 
     public function terms_conditions_process(Request $request)
     {
@@ -25,9 +58,7 @@ class SettingController extends Controller
 
         Setting::where('code', Setting::TERMS_CODE)->update([
             'setting_value' => $request->input('terms_conditions'),
-            'created_by' => Auth::user()->id,
             'updated_by' => Auth::user()->id,
-            'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString(),
         ]);
 
