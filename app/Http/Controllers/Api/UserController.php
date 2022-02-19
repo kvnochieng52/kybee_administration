@@ -11,7 +11,9 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -63,30 +65,37 @@ class UserController extends Controller
 
             $user = new User();
             $user->telephone = $request->input('telephone');
+            $user->ext_phone = SMS::clean_phone_number($request->input('telephone'));
             $user->is_active = 1;
             $user->password = Hash::make($request->input('password'));
             //$user->email = 'the-email@example.com';
-            $user->name = '';
+            $user->name = '<unspecified>';
             $user->verification_code = $randomNumber;
             $user->save();
 
 
-            UserLoanDistribution::insert([
-                'user_id' => $user->id,
-                'created_at' => Carbon::now()->toDateTimeString(),
-                'updated_at' => Carbon::now()->toDateTimeString(),
-            ]);
-
-
             UserDetail::insert([
                 'user_id' => $user->id,
-                'loan_distribution_id' => LoanDistribution::where(['order' => 1, 'visible' => 1])->fisrt()->id,
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'updated_at' => Carbon::now()->toDateTimeString(),
             ]);
 
+
+            UserLoanDistribution::insert([
+                'user_id' => $user->id,
+                'loan_distribution_id' => LoanDistribution::where(['order' => 1, 'visible' => 1])->first()->id,
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
+            ]);
+
+
+            DB::table('model_has_roles')->insert([
+                'role_id' => Role::where('name', 'Customer')->first()->id,
+                'model_type' => 'App\User',
+                'model_id' => $user->id
+            ]);
             $message = "KYBEE LOAN verification code is: {$randomNumber}";
-            // SMS::send($request->input('telephone'), $message);
+            //SMS::send($request->input('telephone'), $message);
 
             $results['success'] = true;
             $results['data'] = User::find($user->id);

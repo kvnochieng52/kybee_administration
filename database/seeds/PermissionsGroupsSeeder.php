@@ -14,25 +14,13 @@ class PermissionsGroupsSeeder extends Seeder
     {
         DB::table('permission_groups')->insert([
             [
-                'group_name' => 'Products',
+                'group_name' => 'Loan Requests',
                 'active' => '1',
                 'order' => '0',
                 'created_by' => '1',
                 'updated_by' => '1',
             ], [
-                'group_name' => 'Business',
-                'active' => '1',
-                'order' => '0',
-                'created_by' => '1',
-                'updated_by' => '1',
-            ], [
-                'group_name' => 'Customers',
-                'active' => '1',
-                'order' => '0',
-                'created_by' => '1',
-                'updated_by' => '1',
-            ], [
-                'group_name' => 'Job Cards',
+                'group_name' => 'Loan Repayments',
                 'active' => '1',
                 'order' => '0',
                 'created_by' => '1',
@@ -44,18 +32,12 @@ class PermissionsGroupsSeeder extends Seeder
                 'created_by' => '1',
                 'updated_by' => '1',
             ], [
-                'group_name' => 'Reports',
-                'active' => '1',
-                'order' => '0',
-                'created_by' => '1',
-                'updated_by' => '1',
-            ], [
                 'group_name' => 'Users',
                 'active' => '1',
                 'order' => '0',
                 'created_by' => '1',
                 'updated_by' => '1',
-            ],
+            ]
 
 
         ]);

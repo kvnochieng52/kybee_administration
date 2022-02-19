@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table id="example1" class="table table-bordered table-striped display nowrap">
+                    <table id="example1" class="table table-bordered table-striped records">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -111,25 +111,13 @@
 @stop
 
 @section('js')
-<script src="/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-
 <script>
-    // $(function () {
-
-    //      $('.terms_textbox').wysihtml5({
-    //         toolbar: {
-    //             "font-styles": true,
-    //             "emphasis": true, 
-    //             "lists": true, 
-    //             "html": false, 
-    //             "link": false, 
-    //             "image": false,
-    //             "color": false, 
-    //             "blockquote": false, 
-    //         }
-    //     })
-
-    // })
-
+    $(function () {
+            $(".records").DataTable({
+            "responsive": false,
+            "autoWidth": false,
+            "ordering": false,
+            });
+        })
 </script>
 @stop
