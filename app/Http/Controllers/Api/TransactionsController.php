@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\LoanDisbursement;
+use App\Models\LoanDistribution;
 use App\Models\LoanRepayment;
 use App\Models\LoanStatus;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use App\Models\MpesaAPI;
 use App\Models\RepaymentStatus;
 use App\Models\SMS;
 use App\Models\UserDetail;
+use App\Models\UserLoanDistribution;
 use App\User;
 
 class TransactionsController extends Controller
@@ -107,7 +109,25 @@ class TransactionsController extends Controller
                 );
 
                 $update_repayment_status_id = Loan::where('id', $active_loan->id)->update($new_repay_status_array);
+
+                /** Update user loan distribution */
+                $highest_loan_distribution = LoanDistribution::HIGHEST_LOAN_ORDER;
+                $current_loan_distribution = UserLoanDistribution::where('user_id', $user_id)->first()->loan_distribution_id;
+                $next_loan_distribution = $current_loan_distribution + 1;
+                if ($current_loan_distribution == $highest_loan_distribution) {
+                    $next_loan_dist = $highest_loan_distribution;
+                } else {
+                    $next_loan_dist = $next_loan_distribution;
+                }
+
+                $new_loan_distribution = array(
+                    'loan_distribution_id' => $next_loan_dist
+                );
+
+                $update_new_user_loan_dist = UserLoanDistribution::where('user_id', $user_id)->update($new_loan_distribution);
             }
+
+            /** Update amount paid and balance in loans table */
 
             $new_loan_amounts = array(
                 'amount_paid' => $new_amount_paid,
@@ -182,7 +202,7 @@ class TransactionsController extends Controller
 
     public function queue_timeout_url()
     {
-       
+
 
         header("Content-Type:application/json");
 
@@ -202,7 +222,7 @@ class TransactionsController extends Controller
     {
 
         // try {
-           
+
 
 
         header("Content-Type:application/json");
@@ -210,7 +230,7 @@ class TransactionsController extends Controller
         $B2CResponse = file_get_contents('php://input');
 
         $decResponse = json_decode($B2CResponse, true);
-       // dd($decResponse);
+        // dd($decResponse);
 
         //$ResultCode = $B2CResponse['Result']);
         //file_put_contents("B2CResultResponseTest.txt", $ResultCode);
@@ -274,15 +294,12 @@ class TransactionsController extends Controller
 
             $loan_disbursement->save();
             /** Start loan sent logg */
-           
-            Log::info("-----------Start Loan Disbursement Log-------");
-            Log::info("Loan ID: " .$active_loan->id. " Loan Amount: ". $TransactionAmount. " Phone Number: ". $ReceiverPartyPhone. " Date: ". $current_time);
-            Log::info("-----------Stop Loan Disbursement Log-------");
 
-          
-        }else{
+            Log::info("-----------Start Loan Disbursement Log-------");
+            Log::info("Loan ID: " . $active_loan->id . " Loan Amount: " . $TransactionAmount . " Phone Number: " . $ReceiverPartyPhone . " Date: " . $current_time);
+            Log::info("-----------Stop Loan Disbursement Log-------");
+        } else {
             /** No transaction has gone successful */
-            
         }
 
 
@@ -323,7 +340,7 @@ class TransactionsController extends Controller
         // }
 
 
-       // file_put_contents("B2CResultResponse.json", $decResponse);
+        // file_put_contents("B2CResultResponse.json", $decResponse);
         // } catch (\Throwable $e) {
 
         //     DB::rollBack();
@@ -404,7 +421,7 @@ class TransactionsController extends Controller
             $data_string = json_encode($curl_post_data);
             $data_string1 = json_decode($data_string, true);
 
-           
+
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_POST, true);
@@ -421,20 +438,20 @@ class TransactionsController extends Controller
             /** Transfer this code to the result url */
             //try {
 
-                //$resCode = $res2['ResponseCode'];
+            //$resCode = $res2['ResponseCode'];
 
-                /** Update the loan status id to 4 - Sent */
-                // $new_loan_status_id = 2;
-                // $new_loan_status_array = array(
-                //     'loan_status_id' => $new_loan_status_id
-                // );
+            /** Update the loan status id to 4 - Sent */
+            // $new_loan_status_id = 2;
+            // $new_loan_status_array = array(
+            //     'loan_status_id' => $new_loan_status_id
+            // );
 
-                // $update_loan_status = Loan::where('id', $active_loans->id)->update($new_loan_status_array);
+            // $update_loan_status = Loan::where('id', $active_loans->id)->update($new_loan_status_array);
 
-                // /** Log the successful transaction */
-                // $current_date_and_time = Carbon::now('Africa/Nairobi');
-                // Log::info("-----------------Start New Transaction Entry (Loan Disbursement)-----------------");
-                // Log::info("Phone Number: " . $PhoneNumber . "Amount: " . $Amount . "Date and Time: " . $current_date_and_time);
+            // /** Log the successful transaction */
+            // $current_date_and_time = Carbon::now('Africa/Nairobi');
+            // Log::info("-----------------Start New Transaction Entry (Loan Disbursement)-----------------");
+            // Log::info("Phone Number: " . $PhoneNumber . "Amount: " . $Amount . "Date and Time: " . $current_date_and_time);
             //     // Log::info("-----------------Stop New Transaction Entry (Loan Disbursement)-----------------");
             // } catch (\Throwable $e) {
             //     $msg = $res2['errorMessage'];

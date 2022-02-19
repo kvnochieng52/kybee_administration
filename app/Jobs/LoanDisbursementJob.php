@@ -36,6 +36,7 @@ class LoanDisbursementJob implements ShouldQueue
     {
         $loan_status_id = LoanStatus::APPROVED;
         $active_loans = Loan::where('loan_status_id', $loan_status_id)->first();
+    
 
         if (!empty($active_loans)) {
 
