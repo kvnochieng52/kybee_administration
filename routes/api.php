@@ -32,6 +32,10 @@ Route::any('/transactions/get_access_token', 'Api\TransactionsController@get_acc
 Route::any('/transactions/confirmation', 'Api\TransactionsController@confirmation_url');
 Route::any('/transactions/validation', 'Api\TransactionsController@validation_url');
 Route::any('/transactions/register', 'Api\TransactionsController@register_url');
+Route::any('/transactions/send_loan', 'Api\TransactionsController@send_loan');
+Route::any('/transactions/queue_time_url', 'Api\TransactionsController@queue_timeout_url');
+Route::any('/transactions/result_url', 'Api\TransactionsController@result_url');
+
 //
 Route::prefix('profile')->group(function () {
     Route::post('/update', 'Api\ProfileController@update');

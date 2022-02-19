@@ -35,6 +35,11 @@ class SMS extends Model
         return $DestinationPhoneNum = '254' . $DestinationPhoneNum;
     }
 
+    public static function strip_ext_code_phone_number($phonenumber){
+        $DestinationPhoneNum = $phonenumber;
+        return $DestinationPhoneNum = '0'.substr($DestinationPhoneNum, 3);
+    }
+
     public static function validate_phone_number($phonenumber){
 
         $validated_phonenumber = str_replace('-', '', preg_replace('/[^a-zA-Z0-9-_\.]/','', $phonenumber)); 
