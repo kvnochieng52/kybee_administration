@@ -44,9 +44,9 @@ class ProfileController extends Controller
                 'updated_at' => Carbon::now()->toDateTimeString(),
             ]);
 
-            User::where('id', $request->input('user_id'))->update([
-                'email' => $request->input('email'),
-            ]);
+            // User::where('id', $request->input('user_id'))->update([
+            //     'email' => $request->input('email'),
+            // ]);
         } else {
 
 
@@ -65,9 +65,9 @@ class ProfileController extends Controller
                         'updated_at' => Carbon::now()->toDateTimeString(),
                     ]);
 
-                    User::where('id', $request->input('user_id'))->update([
-                        'email' => $request->input('email'),
-                    ]);
+                    // User::where('id', $request->input('user_id'))->update([
+                    //     'email' => $request->input('email'),
+                    // ]);
                     break;
                 case "contacts":
 
