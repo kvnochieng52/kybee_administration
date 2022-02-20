@@ -315,6 +315,33 @@ return [
 
         ],
 
+
+        [
+            'text'    => 'Transactions',
+            'icon'    => 'fas fa-fw fa-server',
+            'submenu' => [
+
+                [
+                    'text' => 'Loan Repayments',
+                    'url'  => 'transaction/loan_repayments',
+                ],
+
+                [
+                    'text' => 'Loans Disbursements',
+                    'url'  => 'transaction/loan_disbursements',
+                ],
+
+
+
+
+
+
+            ],
+            'can' => 'View Loan Repayment'
+
+        ],
+
+
         [
             'text'    => 'Settings',
             'icon'    => 'fas fa-fw fa-cog',

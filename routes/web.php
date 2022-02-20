@@ -39,6 +39,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/update', 'SettingController@update');
     });
 
+    Route::prefix('transaction')->group(function () {
+        Route::get('/loan_repayments', 'TransactionController@loan_repayments');
+        Route::get('/loan_disbursements', 'TransactionController@loan_disbursements');
+    });
+
     Route::prefix('admin')->group(function () {
         Route::get('/roles/create', 'Admin\\UserController@role_create');
         Route::get('/roles/', 'Admin\\UserController@role_index');
