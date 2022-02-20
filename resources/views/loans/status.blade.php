@@ -25,6 +25,8 @@
                                 <th>Telephone</th>
                                 <th>Loan Amount</th>
                                 <th>Disbursed</th>
+                                <th>Balance</th>
+                                <th>Paid Amount</th>
                                 <th>Intrest</th>
                                 <th>Application Date</th>
                                 <th>Due Date</th>
@@ -45,6 +47,8 @@
                                 <td>{{$loan->telephone}}</td>
                                 <td>Ksh {{$loan->total_amount}}</td>
                                 <td>Ksh {{$loan->disbursed}}</td>
+                                <td>Ksh {{$loan->balance}}</td>
+                                <td>Ksh {{$loan->amount_paid}}</td>
                                 <td>Ksh {{$loan->interest+$loan->commission}}</td>
                                 <td> {{\Carbon\Carbon::parse($loan->application_date)->format("d-F-Y")}}</td>
                                 <td> {{\Carbon\Carbon::parse($loan->due_date)->format("d-F-Y")}}</td>
