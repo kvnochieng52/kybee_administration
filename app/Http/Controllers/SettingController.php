@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
+
+    public function terms_conditions_web()
+    {
+        return view('settings.terms_conditions_web')->with([
+            'terms' => Setting::where('code', Setting::TERMS_CODE)->first()->setting_value,
+        ]);
+    }
+
     public function terms_conditions(Request $request)
     {
         return view('settings.terms_conditions')->with([

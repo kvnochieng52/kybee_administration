@@ -243,6 +243,7 @@ return [
             'text'        => 'Dashboard',
             'url'         => '/',
             'icon'        => 'nav-icon fas fa-tachometer-alt',
+            'can' => 'View Loan Requests'
             // 'label'       => 4,
             //'label_color' => 'warning',
         ],

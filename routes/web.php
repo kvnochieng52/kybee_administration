@@ -18,6 +18,8 @@ Route::get('/home', 'HomeController@index');
 
 Auth::routes();
 
+Route::get('terms_and_conditions', 'SettingController@terms_conditions_web');
+
 Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('loans', 'LoanController');
