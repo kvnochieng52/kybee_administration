@@ -10,6 +10,17 @@ use Illuminate\Support\Facades\Auth;
 class SettingController extends Controller
 {
 
+
+    public function privacy_policy()
+    {
+        return view('settings.privacy_policy')->with([
+            'privacy_policy' => Setting::where('code', Setting::PRIVACY_POLICY)->first()->setting_value,
+        ]);
+    }
+
+
+
+
     public function terms_conditions_web()
     {
         return view('settings.terms_conditions_web')->with([

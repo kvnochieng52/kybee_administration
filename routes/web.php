@@ -19,6 +19,7 @@ Route::get('/home', 'HomeController@index');
 Auth::routes();
 
 Route::get('terms_and_conditions', 'SettingController@terms_conditions_web');
+Route::get('privacy_policy', 'SettingController@privacy_policy');
 
 Route::group(['middleware' => 'auth'], function () {
 
