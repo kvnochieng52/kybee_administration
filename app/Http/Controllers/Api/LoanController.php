@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\LoanDistribution;
+use App\Models\LoanMeta;
 use App\Models\RepaymentStatus;
 use App\Models\Setting;
 use App\Models\UserDetail;
@@ -13,6 +14,22 @@ use Illuminate\Support\Carbon;
 
 class LoanController extends Controller
 {
+
+
+
+    public function meta_init(Request $request)
+    {
+
+        $loan_meta_details = LoanMeta::where('visible', 1)->first();
+        $loan_meta_details->calculations = LoanMeta::calculateLoan($loan_meta_details->id);
+
+        return response()->json([
+            "success" => true,
+            "loan_meta_details" => $loan_meta_details,
+            "currency" => Setting::where('code', 'CURRENCY')->where('active', 1)->first()->setting_value,
+        ]);
+    }
+
     public function dashboard_init(Request $request)
     {
 
