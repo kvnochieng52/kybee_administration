@@ -63,12 +63,12 @@ class Loan extends Model
         $loan = new Loan();
         $loan->user_id = $user_id;
         $loan->loan_distribution_id = $loan_distribution_id;
-        $loan->total_amount = $loan_details['total_loan_amount'];
+        $loan->total_amount = $loan_details['repayment'];
         $loan->disbursed = $loan_details['disbursed'];
         $loan->interest = $loan_details['intrest'];
         $loan->commission = $loan_details['commission'];
         $loan->amount_paid = 0;
-        $loan->balance = $loan_details['total_loan_amount'];
+        $loan->balance = $loan_details['repayment'];
         $loan->application_date = $loan_details['application_date'];
         $loan->due_date = $loan_details['due_date'];
         $loan->repayment_status_id = RepaymentStatus::OPEN;
