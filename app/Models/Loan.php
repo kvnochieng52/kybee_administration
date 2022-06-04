@@ -60,6 +60,9 @@ class Loan extends Model
     {
         $loan_details = self::calculateLoan($loan_distribution_id);
 
+        print_r($loan_details);
+        exit;
+
         $loan = new Loan();
         $loan->user_id = $user_id;
         $loan->loan_distribution_id = $loan_distribution_id;
