@@ -18,7 +18,7 @@ class Loan extends Model
         $intrest = round($total_loan_amount * ($intrest_rates->interest_percentage / 100) / 365 * 90);
         $commission =  round($total_loan_amount * ($intrest_rates->commission_percentage / 100));
 
-        $total_repayment = $total_loan_amount + ($intrest + $commission);
+        $repayment = $total_loan_amount + ($intrest + $commission);
 
         return [
             "total_loan_amount" => $total_loan_amount,
@@ -30,7 +30,7 @@ class Loan extends Model
             "total_loan_amount_formatted" => number_format($total_loan_amount),
             "intrest_formatted" => number_format($intrest),
             "commission_formatted" => number_format($commission),
-            "disbursed_formatted" => number_format($total_repayment),
+            "disbursed_formatted" => number_format($total_loan_amount),
 
             "application_date" => Carbon::now()->format("Y-m-d"),
             "due_date" => Carbon::now()->addDays($loan->period)->format("Y-m-d"),
