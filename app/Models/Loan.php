@@ -31,6 +31,7 @@ class Loan extends Model
             "intrest_formatted" => number_format($intrest),
             "commission_formatted" => number_format($commission),
             "disbursed_formatted" => number_format($total_loan_amount),
+            "repayment" => number_format($repayment),
 
             "application_date" => Carbon::now()->format("Y-m-d"),
             "due_date" => Carbon::now()->addDays($loan->period)->format("Y-m-d"),
