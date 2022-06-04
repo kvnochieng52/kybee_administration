@@ -32,8 +32,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-
         return view('home')->with([
             'loan_pending_approval_stats' => Loan::where('loan_status_id', LoanStatus::PENDING_APPROVAL)->count(),
             'loan_overdue_stats' => Loan::where('due_date', '>', Carbon::now()->format("Y-m-d"))->count(),
