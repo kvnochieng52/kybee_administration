@@ -26,13 +26,12 @@ class Loan extends Model
             "commission" => $commission,
             //  "disbursed" => $disbursed,
             "disbursed" => $total_loan_amount,
-
+            "repayment" => $repayment,
             "total_loan_amount_formatted" => number_format($total_loan_amount),
             "intrest_formatted" => number_format($intrest),
             "commission_formatted" => number_format($commission),
             "disbursed_formatted" => number_format($total_loan_amount),
-            "repayment" => number_format($repayment),
-
+            "repayment_formatted" => number_format($repayment),
             "application_date" => Carbon::now()->format("Y-m-d"),
             "due_date" => Carbon::now()->addDays($loan->period)->format("Y-m-d"),
             "application_date_formatted" => Carbon::now()->format("d-F-Y"),
@@ -59,9 +58,6 @@ class Loan extends Model
     public static function process($user_id, $loan_distribution_id)
     {
         $loan_details = self::calculateLoan($loan_distribution_id);
-
-        print_r($loan_details);
-        exit;
 
         $loan = new Loan();
         $loan->user_id = $user_id;
