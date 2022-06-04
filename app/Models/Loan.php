@@ -15,10 +15,10 @@ class Loan extends Model
 
         $total_loan_amount = round($loan->max_amount);
 
-        $intrest = round($total_loan_amount * ($intrest_rates->interest_percentage / 100));
+        $intrest = round($total_loan_amount * ($intrest_rates->interest_percentage / 100) / (365 * $loan->period));
         $commission =  round($total_loan_amount * ($intrest_rates->commission_percentage / 100));
 
-        $disbursed = $total_loan_amount - ($intrest + $commission);
+        $disbursed = $total_loan_amount + ($intrest + $commission);
 
         return [
             "total_loan_amount" => $total_loan_amount,
