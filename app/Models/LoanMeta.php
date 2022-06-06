@@ -9,8 +9,8 @@ class LoanMeta extends Model
 {
     public static function calculateLoan($meta_distribution_id)
     {
-        $loan = LoanDistribution::where('id', $meta_distribution_id)->first();
-        $intrest_rates = InterestRate::where('active_rate', 1)->first();
+        $loan = LoanMeta::where('id', $meta_distribution_id)->first();
+        $intrest_rates = MetaInterestRate::where('active_rate', 1)->first();
 
         $total_loan_amount = round($loan->max_amount);
 
