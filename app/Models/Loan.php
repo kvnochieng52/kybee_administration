@@ -15,7 +15,7 @@ class Loan extends Model
 
         $total_loan_amount = round($loan->max_amount);
 
-        $intrest = round($total_loan_amount * ($intrest_rates->interest_percentage / 100) / 365 * 90);
+        $intrest = round($total_loan_amount * ($intrest_rates->interest_percentage / 100) / 365 * $loan->period);
         $commission =  round($total_loan_amount * ($intrest_rates->commission_percentage / 100));
 
         $repayment = $total_loan_amount + ($intrest + $commission);
