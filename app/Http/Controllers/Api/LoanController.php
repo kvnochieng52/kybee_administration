@@ -65,8 +65,11 @@ class LoanController extends Controller
             "default_loan" => Loan::calculateLoan($user_details->loan_distribution_id),
             "active_loan" => !empty($active_loan) ? true : false,
             "active_loan_details" => $active_loan,
+            "statement_details" => Setting::where('code', 'STATEMENT_DETAILS')->where('active', 1)->first()->setting_value,
         ]);
     }
+
+
 
 
     public function calculate_loan(Request $request)
