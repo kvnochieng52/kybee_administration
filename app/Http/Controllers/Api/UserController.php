@@ -95,7 +95,7 @@ class UserController extends Controller
                 'model_id' => $user->id
             ]);
             $message = "KYBEE LOAN verification code is: {$randomNumber}";
-            // SMS::send($request->input('telephone'), $message);
+            SMS::send($request->input('telephone'), $message);
 
             $results['success'] = true;
             $results['data'] = User::find($user->id);

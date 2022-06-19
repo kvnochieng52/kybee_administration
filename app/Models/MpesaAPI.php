@@ -93,7 +93,7 @@ class MpesaAPI extends Model
     public static function generate_security_credential()
     {
 
-        $password = 'Bcdefa123@';
+        $password = env('MPESA_B2C_PASSWORD');
 
         $encrypted = '';
 
