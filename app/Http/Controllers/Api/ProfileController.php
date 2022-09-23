@@ -17,6 +17,7 @@ use App\Models\UserFile;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -24,8 +25,12 @@ class ProfileController extends Controller
 
     public function upload_image(Request $request)
     {
-        echo "here";
-        exit;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $image_file = $request->file('image');
+            $image_file_name = Str::random(30) . '.' . $image_file->getClientOriginalExtension();
+            $image_file->move('uploads/images/', $image_file_name);
+            // $subscriber->image = 'uploads/images/' . $image_file_name;
+        }
     }
 
     public function update(Request $request)
