@@ -41,6 +41,9 @@ Route::prefix('profile')->group(function () {
     Route::post('/update', 'Api\ProfileController@update');
     Route::post('/details', 'Api\ProfileController@details');
     Route::post('/store_sms', 'Api\ProfileController@store_sms');
+
+
+    Route::post('/upload_image', 'Api\ProfileController@upload_image');
 });
 
 
