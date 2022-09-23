@@ -27,19 +27,14 @@ class ProfileController extends Controller
     {
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $image_file = $request->file('image');
-            $image_file_name = $request->input('user_id') . '.' . $image_file->getClientOriginalExtension();
+            $image_file_name = Str::random(30) . '.' . $image_file->getClientOriginalExtension();
             $image_file->move('uploads/images/', $image_file_name);
-            // UserDetail::where('user_id', $request->input('user_id'))->update([
-            //     'first_name' => $request->input('first_name'),
-            //     'middle_name' => $request->input('middle_name'),
-            //     'last_name' => $request->input('last_name'),
-            //     'id_number' => $request->input('id_number'),
-            //     'email' => $request->input('email'),
-            //     'date_of_birth' => Carbon::parse($request->input('dob'))->format("Y-m-d"),
-            //     'gender_id' => $request->input('gender'),
-            //     'updated_by' => $request->input('user_id'),
-            //     'updated_at' => Carbon::now()->toDateTimeString(),
-            // ]);
+
+            UserDetail::where('user_id', $request->input('user_id'))->update([
+                'selfie' => 'uploads/images/' . $image_file_name,
+                'updated_by' => $request->input('user_id'),
+                'updated_at' => Carbon::now()->toDateTimeString(),
+            ]);
         }
     }
 
