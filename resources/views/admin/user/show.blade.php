@@ -35,6 +35,13 @@
                         class="fas fa-money-bill"></i>
                     LOANS</a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-four-loans-tab" data-toggle="pill"
+                    href="#custom-tabs-four-documents" role="tab" aria-controls="custom-tabs-four-loans"
+                    aria-selected="false"><i class="fas fa-money-file"></i>
+                    DOCUMENTS</a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -56,6 +63,11 @@
             <div class="tab-pane fade" id="custom-tabs-four-loans" role="tabpanel"
                 aria-labelledby="custom-tabs-four-loans-tab">
                 @include('admin.user.show._loans')
+            </div>
+
+            <div class="tab-pane fade" id="custom-tabs-four-documents" role="tabpanel"
+                aria-labelledby="custom-tabs-four-loans-tab">
+                @include('admin.user.show._documents')
             </div>
 
         </div>
