@@ -39,7 +39,7 @@
             <li class="nav-item">
                 <a class="nav-link" id="custom-tabs-four-loans-tab" data-toggle="pill"
                     href="#custom-tabs-four-documents" role="tab" aria-controls="custom-tabs-four-loans"
-                    aria-selected="false"><i class="fas fa-money-file"></i>
+                    aria-selected="false"><i class="fas fa-file"></i>
                     DOCUMENTS</a>
             </li>
         </ul>
