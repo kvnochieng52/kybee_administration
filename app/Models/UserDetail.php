@@ -59,7 +59,10 @@ class UserDetail extends Model
                 empty($details->company_county_id) ||
                 empty($details->company_address) ||
                 empty($details->county_id) ||
-                empty($details->home_address)
+                empty($details->home_address) ||
+                empty($details->id_front) ||
+                empty($details->id_back) ||
+                empty($details->selfie)
             ) {
                 $result = false;
             } else {
