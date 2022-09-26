@@ -25,16 +25,32 @@ class ProfileController extends Controller
 
     public function upload_image(Request $request)
     {
+
+
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $image_file = $request->file('image');
             $image_file_name = Str::random(30) . '.' . $image_file->getClientOriginalExtension();
             $image_file->move('uploads/images/', $image_file_name);
 
-            UserDetail::where('user_id', $request->input('user_id'))->update([
-                'selfie' => 'uploads/images/' . $image_file_name,
+
+            $details_array = [
                 'updated_by' => $request->input('user_id'),
                 'updated_at' => Carbon::now()->toDateTimeString(),
-            ]);
+            ];
+
+            if ($request->input('type') == 'selfie') {
+                $details_array['selfie'] = 'uploads/images/' . $image_file_name;
+            }
+
+            if ($request->input('type') == 'id_front') {
+                $details_array['id_front'] = 'uploads/images/' . $image_file_name;
+            }
+
+            if ($request->input('type') == 'id_back') {
+                $details_array['id_back'] = 'uploads/images/' . $image_file_name;
+            }
+
+            UserDetail::where('user_id', $request->input('user_id'))->update($details_array);
         }
     }
 
